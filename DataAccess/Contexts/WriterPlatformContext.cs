@@ -8,17 +8,17 @@ public partial class WriterPlatformContext : DbContext
     public WriterPlatformContext(DbContextOptions<WriterPlatformContext> options)
         : base(options) {}
 
-    public virtual DbSet<Author> Authors { get; set; }
-    public virtual DbSet<Comment> Comments { get; set; }
-    public virtual DbSet<Genre> Genres { get; set; }
+    public virtual DbSet<AuthorEntity> Authors { get; set; }
+    public virtual DbSet<CommentEntity> Comments { get; set; }
+    public virtual DbSet<GenreEntity> Genres { get; set; }
     public virtual DbSet<Rating> Ratings { get; set; }
-    public virtual DbSet<Role> Roles { get; set; }
-    public virtual DbSet<User> Users { get; set; }
-    public virtual DbSet<Work> Works { get; set; }
+    public virtual DbSet<RoleEntity> Roles { get; set; }
+    public virtual DbSet<UserEntity> Users { get; set; }
+    public virtual DbSet<WorkEntity> Works { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Author>(entity =>
+        modelBuilder.Entity<AuthorEntity>(entity =>
         {
             entity.HasKey(e => e.AuthorId).HasName("authors_pkey");
 
@@ -33,7 +33,7 @@ public partial class WriterPlatformContext : DbContext
                 .HasColumnName("last_name");
         });
 
-        modelBuilder.Entity<Comment>(entity =>
+        modelBuilder.Entity<CommentEntity>(entity =>
         {
             entity.HasKey(e => e.CommentsId).HasName("comments_pkey");
 
@@ -59,7 +59,7 @@ public partial class WriterPlatformContext : DbContext
                 .HasConstraintName("comments_works_id_fkey");
         });
 
-        modelBuilder.Entity<Genre>(entity =>
+        modelBuilder.Entity<GenreEntity>(entity =>
         {
             entity.HasKey(e => e.GenreId).HasName("genres_pkey");
 
@@ -95,7 +95,7 @@ public partial class WriterPlatformContext : DbContext
                 .HasConstraintName("ratings_works_id_fkey");
         });
 
-        modelBuilder.Entity<Role>(entity =>
+        modelBuilder.Entity<RoleEntity>(entity =>
         {
             entity.HasKey(e => e.RoleId).HasName("roles_pkey");
 
@@ -109,7 +109,7 @@ public partial class WriterPlatformContext : DbContext
                 .HasColumnName("name");
         });
 
-        modelBuilder.Entity<User>(entity =>
+        modelBuilder.Entity<UserEntity>(entity =>
         {
             entity.HasKey(e => e.UserId).HasName("users_pkey");
 
@@ -138,7 +138,7 @@ public partial class WriterPlatformContext : DbContext
                 .HasConstraintName("users_role_id_fkey");
         });
 
-        modelBuilder.Entity<Work>(entity =>
+        modelBuilder.Entity<WorkEntity>(entity =>
         {
             entity.HasKey(e => e.WorksId).HasName("works_pkey");
 

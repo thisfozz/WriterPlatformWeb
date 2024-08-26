@@ -1,6 +1,6 @@
 ﻿namespace DataAccess.Entities;
 
-public partial class Work
+public partial class WorkEntity
 {
     public int WorksId { get; set; }
     public string Title { get; set; } = null!;
@@ -9,8 +9,8 @@ public partial class Work
     public DateOnly PublicationDate { get; set; }
     public string Text { get; set; } = null!;
     public decimal? AverageRating { get; set; }
-    public virtual Author Author { get; set; } = null!;
-    public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>();
-    public virtual Genre Genre { get; set; } = null!;
+    public virtual AuthorEntity Author { get; set; } = null!;
+    public virtual ICollection<CommentEntity> Comments { get; set; } = new List<CommentEntity>();
+    public virtual GenreEntity Genre { get; set; } = null!;
     public virtual ICollection<Rating> Ratings { get; set; } = new List<Rating>();
 }
