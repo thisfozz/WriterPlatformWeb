@@ -1,4 +1,6 @@
 ﻿using DataAccess.Contexts;
+using DataAccess.Repositories.Contracts.Interfaces;
+using DataAccess.Repositories.Implementations;
 using Microsoft.EntityFrameworkCore;
 
 namespace WriterPlatformWeb;
@@ -20,6 +22,13 @@ public class Startup
         var connectionString = configuration.GetConnectionString("DefaultConnection");
         services.AddDbContext<WriterPlatformContext>(
                             options => options.UseNpgsql(connectionString));
+
+        services.AddScoped<ICommentRepository, CommentRepository>();
+        services.AddScoped<IGenreRepository, GenreRepository>();
+        services.AddScoped<IRatingRepository, RatingRepository>();
+        services.AddScoped<IRoleRepository, RoleRepository>();
+        services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IWorkRepository, WorkRepository>();
 
 
         services.AddEndpointsApiExplorer();
