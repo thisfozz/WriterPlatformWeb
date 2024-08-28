@@ -1,6 +1,7 @@
 ﻿using DataAccess.Contexts;
 using DataAccess.Entities;
 using DataAccess.Repositories.Contracts.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess.Repositories.Implementations;
 
@@ -15,11 +16,11 @@ public class RoleRepository : IRoleRepository
 
     public async Task<IEnumerable<RoleEntity>> GetAllRolesAsync()
     {
-        throw new NotImplementedException();
+        return await _context.Roles.ToListAsync();
     }
 
     public async Task<RoleEntity> GetRoleByIdAsync(int roleId)
     {
-        throw new NotImplementedException();
+        return await _context.Roles.FindAsync(roleId);
     }
 }

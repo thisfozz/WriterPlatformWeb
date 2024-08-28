@@ -9,4 +9,8 @@ public interface IWorkRepository
     Task<IEnumerable<WorkEntity>> SearchWorksAsync(string authorName, string title, int genreId);
     Task<IEnumerable<WorkEntity>> GetTopWorksByRatingAsync(int topCount = 50);
     Task<IEnumerable<WorkEntity>> GetTopWorksByCommentsAsync(int topCount = 50);
+    Task<decimal?> GetCurrentRatingAsync(int workId);
+    Task<bool> UpdateRatingAsync(int workId, decimal newAverageRating);
+    Task<CommentEntity> AddCommentAsync(int userId, int workId, string text);
+    Task<bool> DeleteCommentAsync(int commentId);
 }

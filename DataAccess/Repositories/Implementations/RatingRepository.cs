@@ -1,6 +1,7 @@
 ﻿using DataAccess.Contexts;
 using DataAccess.Entities;
 using DataAccess.Repositories.Contracts.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess.Repositories.Implementations;
 
@@ -13,18 +14,30 @@ public class RatingRepository : IRatingRepository
         _context = context;
     }
 
-    public async Task<Rating> AddRatingAsync(int userId, int workId, int ratingValue)
+    public async Task<RatingEntity> AddRatingAsync(int userId, int workId, int ratingValue)
     {
-        throw new NotImplementedException();
+        var rating = new RatingEntity
+        {
+            UserId = userId,
+            WorksId = workId,
+            RatingValue = ratingValue
+        };
+
+        var work = await _context.Works.Include(w => w.Ratings).FirstOrDefaultAsync(w => w.WorksId == workId);
+
+        if(work != null)
+        {
+            work.Ratings.Add(rating);
+        }
+
+        _context.Ratings.Add(rating);
+        await _context.SaveChangesAsync();
+
+        return rating;
     }
 
-    public async Task<IEnumerable<Rating>> GetRatingsByWorkIdAsync(int workId)
+    public async Task<IEnumerable<RatingEntity>> GetRatingsByWorkIdAsync(int workId)
     {
-        throw new NotImplementedException();
-    }
-
-    public async Task UpdateRatingAsync(int ratingId, int ratingValue)
-    {
-        throw new NotImplementedException();
+        return await _context.Ratings.Where(args => args.WorksId == workId).ToListAsync();
     }
 }

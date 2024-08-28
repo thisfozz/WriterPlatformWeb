@@ -9,6 +9,6 @@ public partial class UserEntity
     public int RoleId { get; set; }
     public bool? IsDeleted { get; set; }
     public virtual ICollection<CommentEntity> Comments { get; set; } = new List<CommentEntity>();
-    public virtual ICollection<Rating> Ratings { get; set; } = new List<Rating>();
+    public virtual ICollection<RatingEntity> Ratings { get; set; } = new List<RatingEntity>();
     public virtual RoleEntity Role { get; set; } = null!;
 }

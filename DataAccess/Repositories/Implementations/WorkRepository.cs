@@ -57,4 +57,65 @@ public class WorkRepository : IWorkRepository
             )
             .ToListAsync();
     }
+
+    public async Task<decimal?> GetCurrentRatingAsync(int workId)
+    {
+        var work = await _context.Works.FindAsync(workId);
+
+        if(work != null)
+        {
+            return work.AverageRating;
+        }
+
+        return null;
+    }
+
+    public async Task<bool> UpdateRatingAsync(int workId, decimal newAverageRating)
+    {
+        var work = await _context.Works.FindAsync(workId);
+
+        if (work != null)
+        {
+            work.AverageRating = newAverageRating;
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        return false;
+    }
+
+    public async Task<CommentEntity> AddCommentAsync(int userId, int workId, string text)
+    {
+        var comment = new CommentEntity
+        {
+            UserId = userId,
+            Text = text,
+            WorksId = workId,
+            CreatedAt = DateTime.Now
+        };
+
+        var work = await _context.Works.Include(w => w.Comments).FirstOrDefaultAsync(w => w.WorksId == workId);
+
+        if (work != null)
+        {
+            work.Comments.Add(comment);
+        }
+
+        _context.Comments.Add(comment);
+        await _context.SaveChangesAsync();
+
+        return comment;
+    }
+
+    public async Task<bool> DeleteCommentAsync(int commentId)
+    {
+        var searchComment = await _context.Comments.FindAsync(commentId);
+        if (searchComment != null)
+        {
+            _context.Comments.Remove(searchComment);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+        return false;
+    }
 }
