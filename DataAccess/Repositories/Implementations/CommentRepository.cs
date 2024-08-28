@@ -16,6 +16,6 @@ public class CommentRepository : ICommentRepository
 
     public async Task<IEnumerable<CommentEntity>> GetCommentsByWorkIdAsync(int workId)
     {
-        return await _context.Comments.Where(args => args.WorksId == workId).ToListAsync();
+        return await _context.Comments.Where(comment => comment.WorksId == workId).ToListAsync();
     }
 }

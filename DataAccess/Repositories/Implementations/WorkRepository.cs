@@ -31,30 +31,29 @@ public class WorkRepository : IWorkRepository
         return work;
     }
 
-    public async Task<WorkEntity> GetWorkByIdAsync(int workId)
+    public async Task<WorkEntity?> GetWorkByIdAsync(int workId)
     {
         return await _context.Works.FindAsync(workId);
     }
 
     public async Task<IEnumerable<WorkEntity>> GetTopWorksByCommentsAsync(int topCount = 50)
     {
-        return await _context.Works.OrderByDescending(args => args.Comments.Count).Take(topCount).ToListAsync();
+        return await _context.Works.OrderByDescending(work => work.Comments.Count).Take(topCount).ToListAsync();
     }
 
     public async Task<IEnumerable<WorkEntity>> GetTopWorksByRatingAsync(int topCount = 50)
     {
-        return await _context.Works.OrderByDescending(args => args.AverageRating).Take(topCount).ToListAsync();
+        return await _context.Works.OrderByDescending(work => work.AverageRating).Take(topCount).ToListAsync();
     }
 
     public async Task<IEnumerable<WorkEntity>> SearchWorksAsync(string authorName, string title, int genreId)
     {
         return await _context.Works
-            .Where(args =>
+            .Where(work =>
                 (string.IsNullOrEmpty(authorName) ||
-                 (args.Author.FirstName + " " + args.Author.LastName).Contains(authorName)) &&
-                (string.IsNullOrEmpty(title) || args.Title.Contains(title)) &&
-                (genreId == 0 || args.GenreId == genreId)
-            )
+                (work.Author.FirstName + " " + work.Author.LastName).Contains(authorName)) &&
+                (string.IsNullOrEmpty(title) || work.Title.Contains(title)) &&
+                (genreId == 0 || work.GenreId == genreId))
             .ToListAsync();
     }
 
@@ -62,26 +61,22 @@ public class WorkRepository : IWorkRepository
     {
         var work = await _context.Works.FindAsync(workId);
 
-        if(work != null)
-        {
-            return work.AverageRating;
-        }
-
-        return null;
+        return work?.AverageRating;
     }
 
     public async Task<bool> UpdateRatingAsync(int workId, decimal newAverageRating)
     {
         var work = await _context.Works.FindAsync(workId);
 
-        if (work != null)
+        if (work == null)
         {
-            work.AverageRating = newAverageRating;
-            await _context.SaveChangesAsync();
-            return true;
+            return false;
         }
 
-        return false;
+        work.AverageRating = newAverageRating;
+        await _context.SaveChangesAsync();
+
+        return true;
     }
 
     public async Task<CommentEntity> AddCommentAsync(int userId, int workId, string text)
@@ -99,23 +94,25 @@ public class WorkRepository : IWorkRepository
         if (work != null)
         {
             work.Comments.Add(comment);
+            _context.Comments.Add(comment);
+            await _context.SaveChangesAsync();
         }
-
-        _context.Comments.Add(comment);
-        await _context.SaveChangesAsync();
 
         return comment;
     }
 
     public async Task<bool> DeleteCommentAsync(int commentId)
     {
-        var searchComment = await _context.Comments.FindAsync(commentId);
-        if (searchComment != null)
+        var comment = await _context.Comments.FindAsync(commentId);
+
+        if (comment == null)
         {
-            _context.Comments.Remove(searchComment);
-            await _context.SaveChangesAsync();
-            return true;
+            return false;
         }
-        return false;
+
+        _context.Comments.Remove(comment);
+        await _context.SaveChangesAsync();
+
+        return true;
     }
 }

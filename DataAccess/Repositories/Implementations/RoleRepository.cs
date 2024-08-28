@@ -14,13 +14,13 @@ public class RoleRepository : IRoleRepository
         _context = context;
     }
 
+    public async Task<RoleEntity?> GetRoleByIdAsync(int roleId)
+    {
+        return await _context.Roles.FindAsync(roleId);
+    }
+
     public async Task<IEnumerable<RoleEntity>> GetAllRolesAsync()
     {
         return await _context.Roles.ToListAsync();
-    }
-
-    public async Task<RoleEntity> GetRoleByIdAsync(int roleId)
-    {
-        return await _context.Roles.FindAsync(roleId);
     }
 }

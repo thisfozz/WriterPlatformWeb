@@ -30,29 +30,24 @@ public class UserRepository : IUserRepository
         return user;
     }
 
-    public async Task<UserEntity> AuthenticateUserAsync(string login, string password)
+    public async Task<UserEntity?> AuthenticateUserAsync(string login, string password)
     {
-        var user = await _context.Users.FirstOrDefaultAsync(u => u.Login == login);
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Login == login && u.PasswordHash == password);
 
         if (user == null)
         {
             return null;
         }
 
-        if(user.PasswordHash == password)
-        {
-            return user;
-        }
-
-        return null;
+        return user;
     }
 
-    public async Task<UserEntity> GetUserByIdAsync(int userId)
+    public async Task<UserEntity?> GetUserByIdAsync(int userId)
     {
         return await _context.Users.FindAsync(userId);
     }
 
-    public async Task<UserEntity> GetUserByLoginAsync(string login)
+    public async Task<UserEntity?> GetUserByLoginAsync(string login)
     {
         return await _context.Users.FindAsync(login);
     }
@@ -61,44 +56,46 @@ public class UserRepository : IUserRepository
     {
         var user = await GetUserByIdAsync(userId);
 
-        if (user != null)
+        if (user == null)
         {
-            user.Email = newEmail;
-            user.PasswordHash = newPassword;
-
-            await _context.SaveChangesAsync();
-
-            return true;
+            return false;
         }
 
-        return false;
+        user.Email = newEmail;
+        user.PasswordHash = newPassword;
+
+        await _context.SaveChangesAsync();
+
+        return true;
     }
 
     public async Task<bool> UpdateUserRoleAsync(string login, int newRoleId)
     {
         var user = await _context.Users.FirstOrDefaultAsync(u => u.Login == login);
 
-        if (user != null)
+        if (user == null)
         {
-            user.RoleId = newRoleId;
-
-            await _context.SaveChangesAsync();
-
-            return true;
+            return false;
         }
 
-        return false;
+        user.RoleId = newRoleId;
+        await _context.SaveChangesAsync();
+
+        return true;
     }
 
     public async Task<bool> DeleteUserAsync(int userId)
     {
-        var searchUser = await _context.Users.FindAsync(userId);
-        if (searchUser != null)
+        var user = await GetUserByIdAsync(userId);
+
+        if (user == null)
         {
-            _context.Users.Remove(searchUser);
-            await _context.SaveChangesAsync();
-            return true;
+            return false;
         }
-        return false;
+
+        _context.Users.Remove(user);
+        await _context.SaveChangesAsync();
+
+        return true;
     }
 }

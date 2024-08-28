@@ -14,13 +14,13 @@ public class GenreRepository : IGenreRepository
         _context = context;
     }
 
+    public async Task<GenreEntity?> GetGenreByIdAsync(int genreId)
+    {
+        return await _context.Genres.FindAsync(genreId);
+    }
+
     public async Task<IEnumerable<GenreEntity>> GetAllGenresAsync()
     {
         return await _context.Genres.ToListAsync();
-    }
-
-    public async Task<GenreEntity> GetGenreByIdAsync(int genreId)
-    {
-        return await _context.Genres.FindAsync(genreId);
     }
 }
