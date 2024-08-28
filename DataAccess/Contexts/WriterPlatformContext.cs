@@ -11,7 +11,7 @@ public partial class WriterPlatformContext : DbContext
     public virtual DbSet<AuthorEntity> Authors { get; set; }
     public virtual DbSet<CommentEntity> Comments { get; set; }
     public virtual DbSet<GenreEntity> Genres { get; set; }
-    public virtual DbSet<Rating> Ratings { get; set; }
+    public virtual DbSet<RatingEntity> Ratings { get; set; }
     public virtual DbSet<RoleEntity> Roles { get; set; }
     public virtual DbSet<UserEntity> Users { get; set; }
     public virtual DbSet<WorkEntity> Works { get; set; }
@@ -73,7 +73,7 @@ public partial class WriterPlatformContext : DbContext
                 .HasColumnName("name");
         });
 
-        modelBuilder.Entity<Rating>(entity =>
+        modelBuilder.Entity<RatingEntity>(entity =>
         {
             entity.HasKey(e => e.RatingId).HasName("ratings_pkey");
 

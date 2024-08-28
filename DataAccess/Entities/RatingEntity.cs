@@ -1,6 +1,6 @@
 ﻿namespace DataAccess.Entities;
 
-public partial class Rating
+public partial class RatingEntity
 {
     public int RatingId { get; set; }
     public int UserId { get; set; }

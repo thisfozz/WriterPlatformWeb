@@ -12,5 +12,5 @@ public partial class WorkEntity
     public virtual AuthorEntity Author { get; set; } = null!;
     public virtual ICollection<CommentEntity> Comments { get; set; } = new List<CommentEntity>();
     public virtual GenreEntity Genre { get; set; } = null!;
-    public virtual ICollection<Rating> Ratings { get; set; } = new List<Rating>();
+    public virtual ICollection<RatingEntity> Ratings { get; set; } = new List<RatingEntity>();
 }
