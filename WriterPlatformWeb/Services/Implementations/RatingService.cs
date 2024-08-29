@@ -15,7 +15,7 @@ public class RatingService : IRatingService
         _ratingRepository = ratingRepository;
         _mapper = mapper;
     }
-    public async Task<RatingDTO> AddRatingAsync(int userId, int workId, int ratingValue)
+    public async Task<RatingDTO> AddRatingAsync(Guid userId, int workId, int ratingValue)
     {
         return _mapper.Map<RatingDTO>(await _ratingRepository.AddRatingAsync(userId, workId, ratingValue));
     }

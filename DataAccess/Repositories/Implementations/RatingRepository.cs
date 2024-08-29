@@ -14,7 +14,7 @@ public class RatingRepository : IRatingRepository
         _context = context;
     }
 
-    public async Task<RatingEntity> AddRatingAsync(int userId, int workId, int ratingValue)
+    public async Task<RatingEntity> AddRatingAsync(Guid userId, int workId, int ratingValue)
     {
         var rating = new RatingEntity
         {

@@ -4,11 +4,12 @@ namespace DataAccess.Repositories.Contracts.Interfaces;
 
 public interface IUserRepository
 {
-    Task<UserEntity> RegisterUserAsync(string login, string password, string email, int roleId);
-    Task<UserEntity?> AuthenticateUserAsync(string login, string password);
-    Task<UserEntity?> GetUserByIdAsync(int userId);
-    Task<UserEntity?> GetUserByLoginAsync(string login);
-    Task<bool> UpdateUserAsync(int userId, string newEmail, string newPassword);
+    Task<UserEntity> RegisterUserAsync(UserEntity user); // РЕГИСТРАЦИЯ ПОЛЬЗОВАТЕЛЯ
+    Task<bool> IsUserRegisteredByLoginAsync(string login); // ПРОВЕРКА ЗАРЕГИСТРИРОВАН ЛИ ПОЛЬЗОВАТЕЛЬ
+
+    Task<UserEntity?> GetUserByIdAsync(Guid userId);
+    Task<UserEntity?> GetUserByLoginOrEmailAsync(string loginOrEmail);
+    Task<bool> UpdateUserAsync(Guid userId, string newEmail, string newPassword);
     Task<bool> UpdateUserRoleAsync(string login, int newRoleId);
-    Task<bool> DeleteUserAsync(int userId);
+    Task<bool> DeleteUserAsync(Guid userId);
 }

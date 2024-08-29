@@ -16,7 +16,7 @@ public class WorkService : IWorkService
         _mapper = mapper;
     }
 
-    public async Task<CommentDTO> AddCommentAsync(int userId, int workId, string text)
+    public async Task<CommentDTO> AddCommentAsync(Guid userId, int workId, string text)
     {
         var comment = await _workRepository.AddCommentAsync(userId, workId, text);
         return _mapper.Map<CommentDTO>(comment);

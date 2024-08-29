@@ -11,6 +11,6 @@ public interface IWorkService
     Task<List<WorkDTO>> GetTopWorksByCommentsAsync(int topCount = 50);
     Task<decimal?> GetCurrentRatingAsync(int workId);
     Task<bool> UpdateRatingAsync(int workId, decimal newAverageRating);
-    Task<CommentDTO> AddCommentAsync(int userId, int workId, string text);
+    Task<CommentDTO> AddCommentAsync(Guid userId, int workId, string text);
     Task<bool> DeleteCommentAsync(int commentId);
 }
