@@ -16,6 +16,11 @@ public class RoleService : IRoleService
         _mapper = mapper;
     }
 
+    public async Task<bool> CreateRoleAsync(string roleName)
+    {
+        return await _roleRepository.CreateRoleAsync(roleName);
+    }
+
     public async Task<RoleDTO?> GetRoleByIdAsync(int roleId)
     {
         return _mapper.Map<RoleDTO>(await _roleRepository.GetRoleByIdAsync(roleId));
