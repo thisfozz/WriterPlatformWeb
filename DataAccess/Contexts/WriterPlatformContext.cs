@@ -7,7 +7,10 @@ namespace DataAccess.Contexts;
 public partial class WriterPlatformContext : DbContext
 {
     public WriterPlatformContext(DbContextOptions<WriterPlatformContext> options)
-        : base(options) {}
+        : base(options) 
+    {
+
+    }
 
     public virtual DbSet<AuthorEntity> Authors { get; set; }
     public virtual DbSet<CommentEntity> Comments { get; set; }

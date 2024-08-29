@@ -13,16 +13,19 @@ public class UserRepository : IUserRepository
     {
         _context = context;
     }
-
-    public async Task<UserEntity> RegisterUserAsync(string login, string password, string email, int roleId)
+    public async Task<bool> IsUserRegisteredByLoginAsync(string login)
     {
-        var user = new UserEntity
+        return await _context.Users.AnyAsync(u => u.Login == login);
+    }
+
+    public async Task<UserEntity> RegisterUserAsync(UserEntity user)
+    {
+        var isUserRegistered = await IsUserRegisteredByLoginAsync(user.Login);
+
+        if (isUserRegistered)
         {
-            Login = login,
-            PasswordHash = password,
-            Email = email,
-            RoleId = roleId
-        };
+            throw new InvalidOperationException("Пользователь с таким логином уже зарегистрирован.");
+        }
 
         _context.Users.Add(user);
         await _context.SaveChangesAsync();
@@ -30,29 +33,17 @@ public class UserRepository : IUserRepository
         return user;
     }
 
-    public async Task<UserEntity?> AuthenticateUserAsync(string login, string password)
-    {
-        var user = await _context.Users.FirstOrDefaultAsync(u => u.Login == login && u.PasswordHash == password);
-
-        if (user == null)
-        {
-            return null;
-        }
-
-        return user;
-    }
-
-    public async Task<UserEntity?> GetUserByIdAsync(int userId)
+    public async Task<UserEntity?> GetUserByIdAsync(Guid userId)
     {
         return await _context.Users.FindAsync(userId);
     }
 
-    public async Task<UserEntity?> GetUserByLoginAsync(string login)
+    public async Task<UserEntity?> GetUserByLoginOrEmailAsync(string loginOrEmail)
     {
-        return await _context.Users.FindAsync(login);
+        return await _context.Users.FirstOrDefaultAsync(u => u.Login == loginOrEmail || u.Email == loginOrEmail);
     }
 
-    public async Task<bool> UpdateUserAsync(int userId, string newEmail, string newPassword)
+    public async Task<bool> UpdateUserAsync(Guid userId, string newEmail, string newPassword)
     {
         var user = await GetUserByIdAsync(userId);
 
@@ -84,7 +75,7 @@ public class UserRepository : IUserRepository
         return true;
     }
 
-    public async Task<bool> DeleteUserAsync(int userId)
+    public async Task<bool> DeleteUserAsync(Guid userId)
     {
         var user = await GetUserByIdAsync(userId);
 

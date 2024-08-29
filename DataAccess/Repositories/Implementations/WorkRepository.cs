@@ -79,7 +79,7 @@ public class WorkRepository : IWorkRepository
         return true;
     }
 
-    public async Task<CommentEntity> AddCommentAsync(int userId, int workId, string text)
+    public async Task<CommentEntity> AddCommentAsync(Guid userId, int workId, string text)
     {
         var comment = new CommentEntity
         {

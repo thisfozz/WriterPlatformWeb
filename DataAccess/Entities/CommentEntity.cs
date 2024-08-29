@@ -3,7 +3,7 @@
 public partial class CommentEntity
 {
     public int CommentsId { get; set; }
-    public int UserId { get; set; }
+    public Guid UserId { get; set; }
     public string Text { get; set; } = null!;
     public int WorksId { get; set; }
     public DateTime? CreatedAt { get; set; }
