@@ -9,5 +9,5 @@ public interface IAuthorRepository
     Task<bool> UpdateAuthorAsync(int authorId, string firstName, string lastName);
     Task<AuthorEntity?> GetAuthorByIdAsync(int authorId);
     Task<IEnumerable<AuthorEntity>> GetAllAuthorsAsync();
-    Task<IEnumerable<AuthorEntity>> SearchAuthorsByFullNameAsync(string fullName);
+    Task<IEnumerable<AuthorEntity>> SearchAuthorsAsync(string fistnameOrLastname);
 }

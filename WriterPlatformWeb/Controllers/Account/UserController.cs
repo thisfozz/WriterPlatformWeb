@@ -1,50 +1,50 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using WriterPlatformWeb.Models.Auth;
 using WriterPlatformWeb.Services.Contracts.Interfaces;
 
-namespace WriterPlatformWeb.Controllers;
+namespace WriterPlatformWeb.Controllers.Account;
 
-public class AccountController : Controller
+[Route("account")]
+public class UserController : Controller
 {
     private readonly IUserService _userService;
 
-    public AccountController(IUserService userService)
+    public UserController(IUserService userService)
     {
         _userService = userService;
     }
 
-    [HttpGet]
+    [HttpGet("login")]
     public IActionResult Login(string returnUrl = null)
     {
         ViewData["ReturnUrl"] = returnUrl;
         return View();
     }
-    [HttpPost]
+
+    [HttpPost("login")]
     public async Task<IActionResult> Login([FromForm] LoginModel model, string returnUrl = null)
     {
         if (ModelState.IsValid)
         {
-            if(await _userService.AuthenticateUserAsync(model))
+            if (await _userService.AuthenticateUserAsync(model))
             {
-                if(!string.IsNullOrEmpty(returnUrl))
-                {
-                    return Redirect(returnUrl);
-                }
-
-                return RedirectToAction("Index", "Home");
+                return string.IsNullOrEmpty(returnUrl) ? RedirectToAction("Index", "Home") : Redirect(returnUrl);
             }
 
             ModelState.AddModelError("", "Пользователь не существует");
         }
+
         return View(model);
     }
 
-    [HttpGet]
+    [HttpGet("register")]
     public IActionResult Register()
     {
         return View();
     }
-    [HttpPost]
+
+    [HttpPost("register")]
     public async Task<IActionResult> Register([FromForm] RegisterModel model)
     {
         if (ModelState.IsValid)
@@ -55,18 +55,29 @@ public class AccountController : Controller
             }
             ModelState.AddModelError("", "Некорректные логин и(или) пароль");
         }
+
         return View(model);
     }
 
+    [HttpPost("logout")]
+    [Authorize]
     public async Task<IActionResult> Logout()
     {
-        await _userService.Logout();
-        return RedirectToAction("Login", "Account");
+        await _userService.LogoutAsync();
+        return RedirectToAction("Login", "User");
     }
 
-    public IActionResult AccessDenied()
+    [HttpPost("delete")]
+    [Authorize]
+    public async Task<IActionResult> DeleteAccount()
     {
-        ViewData["errormessage"] = "Доступ к странице запрещен";
-        return View();
+        var result = await _userService.DeleteUserAsync();
+        if (result)
+        {
+            TempData["SuccessMessage"] = "Аккаунт успешно удален";
+            return RedirectToAction("Index", "Home");
+        }
+        ModelState.AddModelError("", "Что-то пошло не так");
+        return View("Settings");
     }
 }

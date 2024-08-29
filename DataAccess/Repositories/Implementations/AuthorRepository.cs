@@ -68,20 +68,31 @@ public class AuthorRepository : IAuthorRepository
         return await _context.Authors.FindAsync(authorId);
     }
 
-    public async Task<IEnumerable<AuthorEntity>> SearchAuthorsByFullNameAsync(string fullName)
+    public async Task<IEnumerable<AuthorEntity>> SearchAuthorsAsync(string fistnameOrLastname)
     {
-        var names = fullName.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-        if (names.Length == 2)
-        {
-            var firstName = names[0];
-            var lastName = names[1];
+        var names = fistnameOrLastname.Split(' ', StringSplitOptions.RemoveEmptyEntries);
 
-            return await _context.Authors
-                .Where(a => a.FirstName.Equals(firstName, StringComparison.OrdinalIgnoreCase) &&
-                            a.LastName.Equals(lastName, StringComparison.OrdinalIgnoreCase))
-                .ToListAsync();
+        if (names.Length == 0)
+        {
+            return Enumerable.Empty<AuthorEntity>();
         }
 
-        return Enumerable.Empty<AuthorEntity>();
+        var firstName = names.Length > 0 ? names[0] : string.Empty;
+        var lastName = names.Length > 1 ? names[1] : string.Empty;
+
+        var authorsQuery = _context.Authors.AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(firstName))
+        {
+            authorsQuery = authorsQuery.Where(x => x.FirstName.Contains(firstName, StringComparison.OrdinalIgnoreCase));
+        }
+
+
+        if (!string.IsNullOrWhiteSpace(lastName))
+        {
+            authorsQuery = authorsQuery.Where(x => x.FirstName.Contains(lastName, StringComparison.OrdinalIgnoreCase));
+        }
+
+        return await authorsQuery.ToListAsync();
     }
 }

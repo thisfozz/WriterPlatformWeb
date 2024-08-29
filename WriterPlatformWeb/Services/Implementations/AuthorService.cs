@@ -43,9 +43,9 @@ public class AuthorService : IAuthorService
         return authors.Select(a => _mapper.Map<AuthorDTO>(a)).ToList();
     }
 
-    public async Task<List<AuthorDTO>> SearchAuthorsByFullNameAsync(string fullName)
+    public async Task<List<AuthorDTO>> SearchAuthorsAsync(string fistnameOrLastname)
     {
-        var authors = await _authorRepository.SearchAuthorsByFullNameAsync(fullName);
+        var authors = await _authorRepository.SearchAuthorsAsync(fistnameOrLastname);
         return authors.Select(a => _mapper.Map<AuthorDTO>(a)).ToList();
     }
 }

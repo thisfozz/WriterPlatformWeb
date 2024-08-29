@@ -18,7 +18,11 @@ public class UserService : IUserService
     private readonly IMapper _mapper;
     private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public UserService(IUserRepository userRepository, IMapper mapper, IHttpContextAccessor httpContextAccessor, IRoleRepository roleRepository)
+    public UserService(
+        IUserRepository userRepository,
+        IMapper mapper,
+        IHttpContextAccessor httpContextAccessor,
+        IRoleRepository roleRepository)
     {
         _userRepository = userRepository;
         _mapper = mapper;
@@ -28,81 +32,76 @@ public class UserService : IUserService
 
     public async Task<bool> RegisterUserAsync(RegisterModel registerModel)
     {
-        var isUserRegistered = await _userRepository.IsUserRegisteredByLoginAsync(registerModel.Login);
-
-        if (!isUserRegistered)
+        if (await _userRepository.IsUserRegisteredByLoginAsync(registerModel.Login))
         {
-            var id = Guid.NewGuid();
-
-            var userEntity = new UserEntity
-            {
-                UserId = id,
-                Login = registerModel.Login,
-                PasswordHash = SHA256Manager.GenerateSaltedHash(registerModel.Password, id.ToString()),
-                RoleId = 1
-            };
-
-            var roleEntity = await _roleRepository.GetRoleByIdAsync(userEntity.RoleId);
-            var role = roleEntity?.Name ?? "User";
-
-            await _userRepository.RegisterUserAsync(userEntity);
-            await SetupUserAuthenticationAsync(registerModel.Login, registerModel.Email, role);
-
-            return true;
+            return false;
         }
 
-        return false;
+        var userId = Guid.NewGuid();
+        var hashedPassword = SHA256Manager.GenerateSaltedHash(registerModel.Password, userId.ToString());
+        var userEntity = new UserEntity
+        {
+            UserId = userId,
+            Login = registerModel.Login,
+            PasswordHash = hashedPassword,
+            RoleId = 1 //Дефолтный ID роли для новых пользователей
+        };
+
+        var role = await _roleRepository.GetRoleByIdAsync(userEntity.RoleId);
+        var roleName = role?.Name ?? "User";
+
+        await _userRepository.RegisterUserAsync(userEntity);
+        await SetupUserAuthenticationAsync(registerModel.Login, registerModel.Email, roleName);
+
+        return true;
     }
 
     public async Task<bool> AuthenticateUserAsync(LoginModel loginModel)
     {
         var user = await _userRepository.GetUserByLoginOrEmailAsync(loginModel.LoginOrEmail);
 
-        if (user != null && SHA256Manager.PasswordMath(loginModel.Password, user.UserId.ToString(), user.PasswordHash))
-        {
-            return true;
-        }
-        return false;
+        return user != null && SHA256Manager.PasswordMath(loginModel.Password, user.UserId.ToString(), user.PasswordHash);
     }
 
-    public async Task<bool> Logout()
+    public async Task<bool> LogoutAsync()
     {
         await _httpContextAccessor.HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-
         return true;
     }
 
-    public async Task<bool> DeleteUserAsync(Guid userId)
+    public async Task<bool> DeleteUserAsync()
     {
+        var userId = GetCurrentUserId();
         return await _userRepository.DeleteUserAsync(userId);
     }
 
-    public async Task<UserDTO?> GetUserByIdAsync(Guid userId)
+    public async Task<UserDTO?> GetUserByIdAsync()
     {
+        var userId = GetCurrentUserId();
         var user = await _userRepository.GetUserByIdAsync(userId);
         return _mapper.Map<UserDTO>(user);
     }
 
-    public async Task<UserDTO?> GetUserByLoginAsync(string login)
+    public async Task<bool> UpdateEmailAsync(string newEmail)
     {
-        var user = await _userRepository.GetUserByLoginOrEmailAsync(login);
-        return _mapper.Map<UserDTO>(user);
+        var userId = GetCurrentUserId();
+        return await _userRepository.UpdateEmailAsync(userId, newEmail);
     }
 
-    public async Task<bool> UpdateUserAsync(Guid userId, string newEmail, string newPassword)
+    public async Task<bool> UpdatePasswordAsync(string newPassword)
     {
-        var passwordHash = SHA256Manager.GenerateSaltedHash(newPassword, userId.ToString());
-        return await _userRepository.UpdateUserAsync(userId, newEmail, newPassword);
+        var userId = GetCurrentUserId();
+        return await _userRepository.UpdatePasswordAsync(userId, newPassword);
     }
 
     public async Task<bool> UpdateUserRoleAsync(string login, int newRoleId)
     {
-        bool roleUpdated = await _userRepository.UpdateUserRoleAsync(login, newRoleId);
-
-        if(roleUpdated)
+        var roleUpdated = await _userRepository.UpdateUserRoleAsync(login, newRoleId);
+        if (roleUpdated)
         {
-            return await UpdateUserRoleAsync(login, newRoleId);
+            return await UpdateUserRoleClaimsAsync(login, newRoleId);
         }
+
         return false;
     }
 
@@ -114,31 +113,36 @@ public class UserService : IUserService
             new Claim(ClaimTypes.Role, role),
             new Claim(ClaimTypes.Email, email)
         };
-        var id = new ClaimsIdentity(claims, "ApplicationCookie", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
+        var identity = new ClaimsIdentity(claims, "ApplicationCookie");
 
-        await _httpContextAccessor.HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(id));
+        await _httpContextAccessor.HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(identity));
     }
 
     private async Task<bool> UpdateUserRoleClaimsAsync(string loginOrEmail, int newRoleId)
     {
         var user = await _userRepository.GetUserByLoginOrEmailAsync(loginOrEmail);
+        if (user == null) return false;
 
-        if(user == null)
-        {
-            return false;
-        }
         var role = await _roleRepository.GetRoleByIdAsync(newRoleId);
+        if (role == null) return false;
 
-        if(role == null )
+        var claims = new[]
         {
-            return false;
-        }
+            new Claim(ClaimTypes.Role, role.Name)
+        };
+        var identity = new ClaimsIdentity(claims, "ApplicationCookie");
 
-        var claimsIdentity = new ClaimsIdentity();
-        claimsIdentity.AddClaim(new Claim(ClaimTypes.Role, role.Name));
-
-        await _httpContextAccessor.HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
-
+        await _httpContextAccessor.HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(identity));
         return true;
+    }
+
+    private Guid GetCurrentUserId()
+    {
+        var userIdClaim = _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier);
+        if (userIdClaim != null && Guid.TryParse(userIdClaim.Value, out Guid userId))
+        {
+            return userId;
+        }
+        throw new UnauthorizedAccessException("User is not authenticated");
     }
 }
