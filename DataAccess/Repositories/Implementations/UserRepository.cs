@@ -43,7 +43,7 @@ public class UserRepository : IUserRepository
         return await _context.Users.FirstOrDefaultAsync(u => u.Login == loginOrEmail || u.Email == loginOrEmail);
     }
 
-    public async Task<bool> UpdateUserAsync(Guid userId, string newEmail, string newPassword)
+    public async Task<bool> UpdateEmailAsync(Guid userId, string newEmail)
     {
         var user = await GetUserByIdAsync(userId);
 
@@ -53,7 +53,22 @@ public class UserRepository : IUserRepository
         }
 
         user.Email = newEmail;
-        user.PasswordHash = newPassword;
+
+        await _context.SaveChangesAsync();
+
+        return true;
+    }
+
+    public async Task<bool> UpdatePasswordAsync(Guid userId, string password)
+    {
+        var user = await GetUserByIdAsync(userId);
+
+        if (user == null)
+        {
+            return false;
+        }
+
+        user.PasswordHash = password;
 
         await _context.SaveChangesAsync();
 

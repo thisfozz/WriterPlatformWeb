@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using WriterPlatformWeb.Models;
 using WriterPlatformWeb.Services.Contracts.Interfaces;
@@ -18,7 +18,6 @@ public class HomeController : Controller
 
     public async Task<IActionResult> Index()
     {
-        await _roleService.CreateRoleAsync("test");
         return View();
     }
 

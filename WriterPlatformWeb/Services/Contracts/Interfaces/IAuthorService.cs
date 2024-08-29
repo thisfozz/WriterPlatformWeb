@@ -9,5 +9,5 @@ public interface IAuthorService
     Task<bool> UpdateAuthorAsync(int authorId, string firstName, string lastName);
     Task<AuthorDTO?> GetAuthorByIdAsync(int authorId);
     Task<List<AuthorDTO>> GetAllAuthorsAsync();
-    Task<List<AuthorDTO>> SearchAuthorsByFullNameAsync(string fullName);
+    Task<List<AuthorDTO>> SearchAuthorsAsync(string fistnameOrLastname);
 }

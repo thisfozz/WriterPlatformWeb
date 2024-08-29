@@ -7,13 +7,13 @@ public interface IUserService
 {
     Task<bool> RegisterUserAsync(RegisterModel registerModel);
     Task<bool> AuthenticateUserAsync(LoginModel loginModel);
-    Task<bool> Logout();
+    Task<bool> LogoutAsync();
 
-    Task<bool> DeleteUserAsync(Guid userId);
+    Task<bool> DeleteUserAsync();
 
-    Task<UserDTO?> GetUserByIdAsync(Guid userId);
-    Task<UserDTO?> GetUserByLoginAsync(string login);
+    Task<UserDTO?> GetUserByIdAsync();
 
-    Task<bool> UpdateUserAsync(Guid userId, string newEmail, string newPassword);
+    Task<bool> UpdateEmailAsync(string newEmail);
+    Task<bool> UpdatePasswordAsync(string password);
     Task<bool> UpdateUserRoleAsync(string login, int newRoleId);
 }
