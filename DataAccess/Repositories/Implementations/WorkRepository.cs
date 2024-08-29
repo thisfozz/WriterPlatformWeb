@@ -46,15 +46,22 @@ public class WorkRepository : IWorkRepository
         return await _context.Works.OrderByDescending(work => work.AverageRating).Take(topCount).ToListAsync();
     }
 
-    public async Task<IEnumerable<WorkEntity>> SearchWorksAsync(string authorName, string title, int genreId)
+    public async Task<IEnumerable<WorkEntity>> SearchWorksAsync(string value)
     {
-        return await _context.Works
-            .Where(work =>
-                (string.IsNullOrEmpty(authorName) ||
-                (work.Author.FirstName + " " + work.Author.LastName).Contains(authorName)) &&
-                (string.IsNullOrEmpty(title) || work.Title.Contains(title)) &&
-                (genreId == 0 || work.GenreId == genreId))
-            .ToListAsync();
+        if (string.IsNullOrEmpty(value))
+        {
+            return await _context.Works.ToListAsync();
+        }
+
+        var query = _context.Works.AsQueryable();
+
+        query = query.Where(work => work.Title.Contains(value));
+
+        query = query.Where(work => (work.Author.FirstName).Contains(value) || (work.Author.LastName).Contains(value) || (work.Author.FirstName + " " + work.Author.LastName).Contains(value));
+
+        query = query.Where(work => work.Genre.Name.Contains(value));
+
+        return await query.ToListAsync();
     }
 
     public async Task<decimal?> GetCurrentRatingAsync(int workId)
@@ -114,5 +121,10 @@ public class WorkRepository : IWorkRepository
         await _context.SaveChangesAsync();
 
         return true;
+    }
+
+    public async Task<IEnumerable<WorkEntity>> GetAllWorksAsync()
+    {
+        return await _context.Works.ToListAsync();
     }
 }

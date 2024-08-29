@@ -7,18 +7,25 @@ namespace WriterPlatformWeb.Controllers;
 
 public class HomeController : Controller
 {
-    private readonly IRoleService _roleService;
+    private readonly IWorkService _workService;
     private readonly ILogger<HomeController> _logger;
 
-    public HomeController(ILogger<HomeController> logger, IRoleService roleService)
+    public HomeController(ILogger<HomeController> logger, IWorkService workService)
     {
         _logger = logger;
-        _roleService = roleService;
+        _workService = workService;
     }
 
     public async Task<IActionResult> Index()
     {
         return View();
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> SearchWorks([FromQuery] string value)
+    {
+        var works = await _workService.SearchWorksAsync(value);
+        return View("Index", works);
     }
 
     public IActionResult Privacy()

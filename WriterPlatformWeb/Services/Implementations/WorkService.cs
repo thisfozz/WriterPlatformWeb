@@ -26,6 +26,12 @@ public class WorkService : IWorkService
     {
         return await _workRepository.DeleteCommentAsync(commentId);
     }
+    public async Task<List<WorkDTO>> GetAlllWorksAsync()
+    {
+        var works = await _workRepository.GetAllWorksAsync();
+        return works.Select(w => _mapper.Map<WorkDTO>(w)).ToList();
+    }
+
 
     public async Task<decimal?> GetCurrentRatingAsync(int workId)
     {
@@ -56,9 +62,9 @@ public class WorkService : IWorkService
         return _mapper.Map<WorkDTO>(work);
     }
 
-    public async Task<List<WorkDTO>> SearchWorksAsync(string authorName, string title, int genreId)
+    public async Task<List<WorkDTO>> SearchWorksAsync(string value)
     {
-        var works = await _workRepository.SearchWorksAsync(authorName, title, genreId);
+        var works = await _workRepository.SearchWorksAsync(value);
         return works.Select(w => _mapper.Map<WorkDTO>(w)).ToList();
     }
 
