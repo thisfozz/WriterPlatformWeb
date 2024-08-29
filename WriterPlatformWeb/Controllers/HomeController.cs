@@ -1,32 +1,34 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using WriterPlatformWeb.Models;
+using WriterPlatformWeb.Services.Contracts.Interfaces;
 
-namespace WriterPlatformWeb.Controllers
+namespace WriterPlatformWeb.Controllers;
+
+public class HomeController : Controller
 {
-    public class HomeController : Controller
+    private readonly IRoleService _roleService;
+    private readonly ILogger<HomeController> _logger;
+
+    public HomeController(ILogger<HomeController> logger, IRoleService roleService)
     {
-        private readonly ILogger<HomeController> _logger;
+        _logger = logger;
+        _roleService = roleService;
+    }
 
-        public HomeController(ILogger<HomeController> logger)
-        {
-            _logger = logger;
-        }
+    public async Task<IActionResult> Index()
+    {
+        return View();
+    }
 
-        public IActionResult Index()
-        {
-            return View();
-        }
+    public IActionResult Privacy()
+    {
+        return View();
+    }
 
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
+    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+    public IActionResult Error()
+    {
+        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
     }
 }

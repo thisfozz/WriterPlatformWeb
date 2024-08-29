@@ -23,4 +23,17 @@ public class RoleRepository : IRoleRepository
     {
         return await _context.Roles.ToListAsync();
     }
+
+    public async Task<bool> CreateRoleAsync(string roleName)
+    {
+        var role = new RoleEntity
+        {
+            Name = roleName 
+        };
+
+        _context.Roles.Add(role);
+        await _context.SaveChangesAsync();
+
+        return true;
+    }
 }
