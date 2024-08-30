@@ -5,7 +5,7 @@ using WriterPlatformWeb.Services.Contracts.Interfaces;
 namespace WriterPlatformWeb.Controllers.Account;
 
 [Route("roles")]
-[Authorize(Roles = "Администратор,Administrator")]
+[Authorize(Roles = "Администратор,Administrator,Admin")]
 public class RoleController : Controller
 {
     private readonly IUserService _userService;
@@ -23,7 +23,7 @@ public class RoleController : Controller
         if (string.IsNullOrWhiteSpace(roleName))
         {
             TempData["ErrorMessage"] = "Имя роли не может быть пустым.";
-            return RedirectToAction("Settings", "Settings");
+            return RedirectToAction("Dashboard", "Admin");
         }
 
         var result = await _roleService.CreateRoleAsync(roleName);
@@ -33,9 +33,9 @@ public class RoleController : Controller
         }
         else
         {
-            ModelState.AddModelError("", "Не удалось создать роль.");
+            TempData["ErrorMessage"] = "Не удалось создать роль.";
         }
-        return RedirectToAction("Settings", "Settings");
+        return RedirectToAction("Dashboard", "Admin");
     }
 
     [HttpPost("update")]
@@ -43,14 +43,14 @@ public class RoleController : Controller
     {
         if (string.IsNullOrWhiteSpace(login))
         {
-            ModelState.AddModelError("", "Введите логин");
-            return RedirectToAction("Settings", "Settings");
+            TempData["ErrorMessage"] = "Введите логин";
+            return RedirectToAction("Dashboard", "Admin");
         }
 
         if (roleId <= 0)
         {
-            ModelState.AddModelError("", "Некорректный идентификатор роли.");
-            return RedirectToAction("Settings", "Settings");
+            TempData["ErrorMessage"] = "Некорректный идентификатор роли.";
+            return RedirectToAction("Dashboard", "Admin");
         }
 
         var result = await _userService.UpdateUserRoleAsync(login, roleId);
@@ -60,9 +60,9 @@ public class RoleController : Controller
         }
         else
         {
-            ModelState.AddModelError("", "Не удалось обновить роль.");
+            TempData["ErrorMessage"] = "Не удалось обновить роль.";
         }
 
-        return RedirectToAction("Settings", "Settings");
+        return RedirectToAction("Dashboard", "Admin");
     }
 }

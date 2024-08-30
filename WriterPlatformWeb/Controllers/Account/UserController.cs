@@ -32,7 +32,7 @@ public class UserController : Controller
                 return string.IsNullOrEmpty(returnUrl) ? RedirectToAction("Index", "Home") : Redirect(returnUrl);
             }
 
-            ModelState.AddModelError("", "Пользователь не существует");
+            TempData["ErrorMessage"] = "Пользователь не существует";
         }
 
         return View(model);
@@ -53,7 +53,7 @@ public class UserController : Controller
             {
                 return RedirectToAction("Index", "Home");
             }
-            ModelState.AddModelError("", "Некорректные логин и(или) пароль");
+            TempData["ErrorMessage"] = "Некорректные логин и(или) пароль";
         }
 
         return View(model);
@@ -77,7 +77,7 @@ public class UserController : Controller
             TempData["SuccessMessage"] = "Аккаунт успешно удален";
             return RedirectToAction("Index", "Home");
         }
-        ModelState.AddModelError("", "Что-то пошло не так");
+        TempData["ErrorMessage"] = "Что-то пошло не так";
         return View("Settings");
     }
 }

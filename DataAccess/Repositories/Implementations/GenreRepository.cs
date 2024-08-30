@@ -14,6 +14,16 @@ public class GenreRepository : IGenreRepository
         _context = context;
     }
 
+    public async Task<bool> CreateGenreAsync(string genreName)
+    {
+        var genre = new GenreEntity { Name = genreName };
+
+        _context.Genres.Add(genre);
+        await _context.SaveChangesAsync();
+
+        return true;
+    }
+
     public async Task<GenreEntity?> GetGenreByIdAsync(int genreId)
     {
         return await _context.Genres.FindAsync(genreId);

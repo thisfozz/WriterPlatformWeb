@@ -26,7 +26,7 @@ public class SettingsController : Controller
     {
         if (string.IsNullOrWhiteSpace(email))
         {
-            ModelState.AddModelError("", "Введите Email");
+            TempData["ErrorMessage"] = "Введите Email";
             return RedirectToAction(nameof(Settings));
         }
 
@@ -37,7 +37,7 @@ public class SettingsController : Controller
         }
         else
         {
-            ModelState.AddModelError("", "Не удалось обновить email.");
+            TempData["ErrorMessage"] = "Не удалось обновить email.";
         }
 
         return RedirectToAction(nameof(Settings));
@@ -48,7 +48,7 @@ public class SettingsController : Controller
     {
         if (string.IsNullOrWhiteSpace(password))
         {
-            ModelState.AddModelError("", "Введите пароль");
+            TempData["ErrorMessage"] = "Введите пароль";
             return RedirectToAction(nameof(Settings));
         }
 
@@ -59,7 +59,7 @@ public class SettingsController : Controller
         }
         else
         {
-            ModelState.AddModelError("", "Не удалось обновить пароль.");
+            TempData["ErrorMessage"] = "Не удалось обновить пароль.";
         }
 
         return RedirectToAction(nameof(Settings));

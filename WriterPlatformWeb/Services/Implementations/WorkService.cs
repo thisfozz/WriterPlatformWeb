@@ -15,17 +15,6 @@ public class WorkService : IWorkService
         _workRepository = workRepository;
         _mapper = mapper;
     }
-
-    public async Task<CommentDTO> AddCommentAsync(Guid userId, int workId, string text)
-    {
-        var comment = await _workRepository.AddCommentAsync(userId, workId, text);
-        return _mapper.Map<CommentDTO>(comment);
-    }
-
-    public async Task<bool> DeleteCommentAsync(int commentId)
-    {
-        return await _workRepository.DeleteCommentAsync(commentId);
-    }
     public async Task<List<WorkDTO>> GetAlllWorksAsync()
     {
         var works = await _workRepository.GetAllWorksAsync();

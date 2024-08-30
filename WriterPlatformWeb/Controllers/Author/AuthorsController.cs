@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using WriterPlatformWeb.Services.Contracts.Interfaces;
 
 namespace WriterPlatformWeb.Controllers.Author;
 
+[Route("author")]
 public class AuthorsController : Controller
 {
     private readonly IAuthorService _authorService;
@@ -16,7 +18,7 @@ public class AuthorsController : Controller
     public async Task<IActionResult> ManageAuthors()
     {
         var authors = await _authorService.GetAllAuthorsAsync();
-        if (authors == null)
+        if (authors == null || !authors.Any())
         {
             return NoContent();
         }
@@ -24,21 +26,20 @@ public class AuthorsController : Controller
     }
 
     [HttpPost("add-author")]
+    [Authorize]
     public async Task<IActionResult> AddAuthor([FromForm] string firstName, [FromForm] string lastName)
     {
         // Добавлена дополнительная серверная проверка потому что может просто офнуть JavaScript и запрос будет отправлен с пустой строкой
-
         if (string.IsNullOrWhiteSpace(firstName))
         {
-            ModelState.AddModelError("", "Введите Имя автора");
+            TempData["ErrorMessage"] = "Введите Имя автора";
             return View(nameof(ManageAuthors));
         }
 
         // Разделение проверки firstName и lastName было сделано для интуитивности пользователя
-
         if (string.IsNullOrWhiteSpace(lastName))
         {
-            ModelState.AddModelError("", "Введите Фамилию автора");
+            TempData["ErrorMessage"] = "Введите Фамилию автора";
             return View(nameof(ManageAuthors));
         }
 
@@ -47,20 +48,21 @@ public class AuthorsController : Controller
         if (author != null)
         {
             TempData["SuccessMessage"] = "Автор успешно создан.";
-            return RedirectToAction("ManageAuthors");
+            return RedirectToAction(nameof(ManageAuthors));
         }
 
-        ModelState.AddModelError("", "Не удалось создать автора");
-        return RedirectToAction("ManageAuthors");
+        TempData["ErrorMessage"] = "Не удалось создать автора";
+        return RedirectToAction(nameof(ManageAuthors));
     }
 
     [HttpPost("delete-author")]
+    [Authorize(Roles = "Администратор,Administrator")]
     public async Task<IActionResult> DeleteAuthor([FromForm] int authorId)
     {
         if (authorId <= 0)
         {
-            ModelState.AddModelError("", "Некорректный идентификатор Автора.");
-            return View(nameof(ManageAuthors));
+            TempData["ErrorMessage"] = "Некорректный идентификатор Автора.";
+            return RedirectToAction(nameof(ManageAuthors));
         }
 
         var result = await _authorService.DeleteAuthorAsync(authorId);
@@ -69,8 +71,11 @@ public class AuthorsController : Controller
         {
             TempData["SuccessMessage"] = "Автор успешно удален.";
         }
+        else
+        {
+            TempData["ErrorMessage"] = "Ошибка при удалении автора";
+        }
 
-        ModelState.AddModelError("", "Ошибка при удалении автора");
-        return RedirectToAction("ManageAuthors");
+        return RedirectToAction(nameof(ManageAuthors));
     }
 }
