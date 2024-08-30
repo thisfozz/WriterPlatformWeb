@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using WriterPlatformWeb.Services.Contracts.Interfaces;
 
 namespace WriterPlatformWeb.Controllers.Author;
 
+[Route("author-details")]
 public class AuthorDetailsController : Controller
 {
     private readonly IAuthorService _authorService;
@@ -13,24 +15,25 @@ public class AuthorDetailsController : Controller
     }
 
     [HttpPost("update-author")]
+    [Authorize(Roles = "Администратор,Administrator,Admin")]
     public async Task<IActionResult> UpdateAuthor([FromForm] int authorId, [FromForm] string firstName, [FromForm] string lastName)
     {
         if (authorId <= 0)
         {
-            ModelState.AddModelError("", "Некорректный идентификатор Автора.");
-            return RedirectToAction("ManageAuthors", "Authors");
+            TempData["ErrorMessage"] = "Некорректный идентификатор Автора.";
+            return RedirectToAction("Dashboard", "Admin");
         }
 
         if (string.IsNullOrWhiteSpace(firstName))
         {
-            ModelState.AddModelError("", "Введите Имя автора");
-            return RedirectToAction("ManageAuthors", "Authors");
+            TempData["ErrorMessage"] = "Введите Имя автора";
+            return RedirectToAction("Dashboard", "Admin");
         }
 
         if (string.IsNullOrWhiteSpace(lastName))
         {
-            ModelState.AddModelError("", "Введите Фамилию автора");
-            return RedirectToAction("ManageAuthors", "Authors");
+            TempData["ErrorMessage"] = "Введите Фамилию автора";
+            return RedirectToAction("Dashboard", "Admin");
         }
 
         var result = await _authorService.UpdateAuthorAsync(authorId, firstName, lastName);
@@ -38,11 +41,13 @@ public class AuthorDetailsController : Controller
         if (result)
         {
             TempData["SuccessMessage"] = "Автор успешно обновлен.";
-            return RedirectToAction("ManageAuthors", "Authors");
+        }
+        else
+        {
+            TempData["ErrorMessage"] = "Ошибка при обновлении автора";
         }
 
-        ModelState.AddModelError("", "Ошибка при обновлении автора");
-        return RedirectToAction("ManageAuthors", "Authors");
+        return RedirectToAction("Dashboard", "Admin");
     }
 
     [HttpPost("details-author")]
@@ -50,7 +55,7 @@ public class AuthorDetailsController : Controller
     {
         if (authorId <= 0)
         {
-            ModelState.AddModelError("", "Некорректный идентификатор роли.");
+            TempData["ErrorMessage"] = "Некорректный идентификатор автора.";
             return RedirectToAction("ManageAuthors", "Authors");
         }
 

@@ -15,6 +15,18 @@ public class GenreService : IGenreService
         _genreRepository = genreRepository;
         _mapper = mapper;
     }
+
+    public async Task<bool> CreateGenreAsync(string genreName)
+    {
+        var genre = await _genreRepository.CreateGenreAsync(genreName);
+
+        if (!genre)
+        {
+            return false;
+        }
+        return true;
+    }
+
     public async Task<List<GenreDTO>> GetAllGenresAsync()
     {
         var genres = await _genreRepository.GetAllGenresAsync();

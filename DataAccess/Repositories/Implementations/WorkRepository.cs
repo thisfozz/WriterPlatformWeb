@@ -86,43 +86,6 @@ public class WorkRepository : IWorkRepository
         return true;
     }
 
-    public async Task<CommentEntity> AddCommentAsync(Guid userId, int workId, string text)
-    {
-        var comment = new CommentEntity
-        {
-            UserId = userId,
-            Text = text,
-            WorksId = workId,
-            CreatedAt = DateTime.Now
-        };
-
-        var work = await _context.Works.Include(w => w.Comments).FirstOrDefaultAsync(w => w.WorksId == workId);
-
-        if (work != null)
-        {
-            work.Comments.Add(comment);
-            _context.Comments.Add(comment);
-            await _context.SaveChangesAsync();
-        }
-
-        return comment;
-    }
-
-    public async Task<bool> DeleteCommentAsync(int commentId)
-    {
-        var comment = await _context.Comments.FindAsync(commentId);
-
-        if (comment == null)
-        {
-            return false;
-        }
-
-        _context.Comments.Remove(comment);
-        await _context.SaveChangesAsync();
-
-        return true;
-    }
-
     public async Task<IEnumerable<WorkEntity>> GetAllWorksAsync()
     {
         return await _context.Works.ToListAsync();
