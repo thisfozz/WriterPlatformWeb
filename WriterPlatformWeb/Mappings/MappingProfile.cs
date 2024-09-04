@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using DataAccess.Entities;
-using WriterPlatformWeb.Models.ViewModel;
+using WriterPlatformWeb.Models.ViewModel.Work;
 using WriterPlatformWeb.Models.Work;
 
 namespace WriterPlatformWeb.Mappings;

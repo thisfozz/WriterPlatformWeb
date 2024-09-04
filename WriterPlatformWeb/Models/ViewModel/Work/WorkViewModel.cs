@@ -1,4 +1,4 @@
-﻿namespace WriterPlatformWeb.Models.ViewModel;
+﻿namespace WriterPlatformWeb.Models.ViewModel.Work;
 
 public class WorkViewModel
 {

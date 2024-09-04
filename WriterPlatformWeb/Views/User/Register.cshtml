@@ -1,0 +1,49 @@
+﻿@using WriterPlatformWeb.Models.Auth;
+@model RegisterModel;
+
+@{
+	ViewData["Title"] = "Регистрация";
+}
+
+<div class="container">
+    <div class="registration-form custom-fonts mt-4 mx-auto" style="max-width: 400px;">
+        <div class="text-center mt-4">
+            <div class="text-center mt-4">
+                <img src="/img/main_logo.png" alt="Logo" style="width: 170px; height: auto;">
+                <h2 class="custom-fonts mt-3">Создать учетную запись</h2>
+            </div>
+        </div>
+
+        <form asp-action="Register" method="post" class="mt-4">
+            <div class="form-group">
+                <label asp-for="Login"></label>
+                <input asp-for="Login" class="form-control custom-fonts" />
+                <span asp-validation-for="Login" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Email"></label>
+                <input asp-for="Email" class="form-control custom-fonts" type="email" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Password"></label>
+                <input asp-for="Password" class="form-control custom-fonts" type="password" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="ConfirmPassword"></label>
+                <input asp-for="ConfirmPassword" class="form-control custom-fonts" type="password" />
+                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary custom-fonts mt-4">Продолжить</button>
+
+            <div class="form-group">
+                <a asp-action="Login" asp-controller="User" class="custom-fonts mt-5">Уже есть аккаунт? Войти</a>
+            </div>
+        </form>
+    </div>
+</div>

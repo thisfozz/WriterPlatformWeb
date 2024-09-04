@@ -1,4 +1,4 @@
-﻿@using WriterPlatformWeb.Models.ViewModel;
+﻿@using WriterPlatformWeb.Models.ViewModel.Work;
 @model IEnumerable<WorkViewModel>;
 
 <!DOCTYPE html>
@@ -6,7 +6,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewData["Writer Paltform"]</title>
 </head>
     <body>
         <header>
@@ -30,7 +29,7 @@
                     </ul>
                     <ul class="navbar-nav ml-auto">
                         <li class="nav-item">
-                            <a asp-action="Login" asp-controller="User">
+                            <a asp-action="Register" asp-controller="User">
                                 <img src="./img/user_icon.png" alt="User Icon" style="width: 30px; height: 30px;">
                             </a>
                         </li>
