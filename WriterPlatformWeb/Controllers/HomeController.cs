@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using WriterPlatformWeb.Models.ViewModel;
+using WriterPlatformWeb.Models.ViewModel.Work;
 using WriterPlatformWeb.Services.Contracts.Interfaces;
 
 namespace WriterPlatformWeb.Controllers;
@@ -19,6 +19,8 @@ public class HomeController : Controller
     [HttpGet]
     public async Task<IActionResult> Index()
     {
+        ViewData["Title"] = "Читательская платформа";
+
         var works = await _workService.GetAlllWorksAsync();
 
         if (works == null && !works.Any())

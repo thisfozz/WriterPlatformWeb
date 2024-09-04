@@ -1,0 +1,33 @@
+﻿@using WriterPlatformWeb.Models.Auth;
+@model LoginModel;
+
+<div class="container">
+    <div class="registration-form custom-fonts mt-4 mx-auto" style="max-width: 400px;">
+        <div class="text-center mt-4">
+            <div class="text-center mt-4">
+                <img src="/img/main_logo.png" alt="Logo" style="width: 170px; height: auto;">
+                <h2 class="custom-fonts mt-3">Войти</h2>
+            </div>
+        </div>
+
+        <form asp-action="Login" method="post" class="mt-4">
+            <div class="form-group">
+                <label asp-for="LoginOrEmail"></label>
+                <input asp-for="LoginOrEmail" class="form-control custom-fonts" />
+                <span asp-validation-for="LoginOrEmail" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Password"></label>
+                <input asp-for="Password" class="form-control custom-fonts" type="password" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary custom-fonts mt-4">Продолжить</button>
+
+            <div class="form-group">
+                <a asp-action="Register" asp-controller="User" class="custom-fonts mt-5">Нет аккаунта? Зарегистрироваться.</a>
+            </div>
+        </form>
+    </div>
+</div>

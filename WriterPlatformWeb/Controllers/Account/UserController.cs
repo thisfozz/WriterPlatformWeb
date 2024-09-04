@@ -18,8 +18,10 @@ public class UserController : Controller
     [HttpGet("login")]
     public IActionResult Login(string returnUrl = null)
     {
-        ViewData["ReturnUrl"] = returnUrl;
-        return View();
+        ViewData["Title"] = "Авторизация";
+        ViewData["ReturnUrl"] = returnUrl; // Временно не используется
+
+        return View("Login");
     }
 
     [HttpPost("login")]
@@ -39,9 +41,12 @@ public class UserController : Controller
     }
 
     [HttpGet("register")]
-    public IActionResult Register()
+    public IActionResult Register(string returnUrl = null)
     {
-        return View();
+        ViewData["Title"] = "Регистрация";
+        ViewData["ReturnUrl"] = returnUrl; // Временно не используется
+
+        return View("Register");
     }
 
     [HttpPost("register")]

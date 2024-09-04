@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using WriterPlatformWeb.Models.Work;
 
-namespace WriterPlatformWeb.Models.ViewModel;
+namespace WriterPlatformWeb.Models.ViewModel.Work;
 
 public class PublishWorkViewModel
 {
