@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
-using WriterPlatformWeb.Models;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
+using WriterPlatformWeb.Models.ViewModel;
 using WriterPlatformWeb.Services.Contracts.Interfaces;
 
 namespace WriterPlatformWeb.Controllers;
@@ -8,17 +8,27 @@ namespace WriterPlatformWeb.Controllers;
 public class HomeController : Controller
 {
     private readonly IWorkService _workService;
-    private readonly ILogger<HomeController> _logger;
+    private readonly IMapper _mapper;
 
-    public HomeController(ILogger<HomeController> logger, IWorkService workService)
+    public HomeController(ILogger<HomeController> logger, IWorkService workService, IMapper mapper)
     {
-        _logger = logger;
         _workService = workService;
+        _mapper = mapper;
     }
 
+    [HttpGet]
     public async Task<IActionResult> Index()
     {
-        return View();
+        var works = await _workService.GetAlllWorksAsync();
+
+        if (works == null && !works.Any())
+        {
+            return NotFound();
+        }
+
+        var workViewModels = _mapper.Map<List<WorkViewModel>>(works);
+
+        return View("Works", workViewModels);
     }
 
     [HttpGet]
@@ -28,14 +38,31 @@ public class HomeController : Controller
         return View("Index", works);
     }
 
-    public IActionResult Privacy()
+    // Показать топовые произведения по рейтингу
+    [HttpGet("top-by-rating")]
+    public async Task<IActionResult> TopWorksByRating([FromQuery] int topCount = 50)
     {
-        return View();
+        var works = await _workService.GetTopWorksByRatingAsync(topCount);
+
+        if (works != null)
+        {
+            ViewBag.TopType = "С высоким рейтингом";
+            return View("Works", works);
+        }
+        return NotFound();
     }
 
-    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public IActionResult Error()
+    // Показать топовые произведения по комментариям
+    [HttpGet("top-by-comments")]
+    public async Task<IActionResult> TopWorksByComments([FromQuery] int topCount = 50)
     {
-        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        var works = await _workService.GetTopWorksByCommentsAsync(topCount);
+
+        if (works != null)
+        {
+            ViewBag.TopType = "Популярные";
+            return View("Works", works);
+        }
+        return NotFound();
     }
 }

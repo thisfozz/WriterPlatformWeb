@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using DataAccess.Entities;
+using WriterPlatformWeb.Models.ViewModel;
 using WriterPlatformWeb.Models.Work;
 
 namespace WriterPlatformWeb.Mappings;
@@ -57,5 +58,8 @@ public class MappingProfile : Profile
             .ForMember(dest => dest.Author, opt => opt.MapFrom(src => src.Author))
             .ForMember(dest => dest.Comments, opt => opt.MapFrom(src => src.Comments))
             .ForMember(dest => dest.Ratings, opt => opt.MapFrom(src => src.Ratings));
+
+        CreateMap<WorkDTO, WorkViewModel>()
+           .ForMember(dest => dest.AverageRating, opt => opt.MapFrom(src => src.AverageRating ?? 0));
     }
 }
