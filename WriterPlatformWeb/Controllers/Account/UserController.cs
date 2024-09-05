@@ -69,11 +69,10 @@ public class UserController : Controller
     }
 
     [HttpPost("logout")]
-    [Authorize]
     public async Task<IActionResult> Logout()
     {
         await _userService.LogoutAsync();
-        return RedirectToAction("Login", "User");
+        return RedirectToAction("Index", "Home");
     }
 
     [HttpPost("delete")]

@@ -33,7 +33,12 @@ public class WorkRepository : IWorkRepository
 
     public async Task<WorkEntity?> GetWorkByIdAsync(int workId)
     {
-        return await _context.Works.FindAsync(workId);
+        return await _context.Works
+            .Include(w => w.Author)
+            .Include(w => w.Genre)
+            .Include(w => w.Comments)
+            .Include(w => w.Ratings)
+            .FirstOrDefaultAsync(w => w.WorksId == workId);
     }
 
     public async Task<IEnumerable<WorkEntity>> GetTopWorksByCommentsAsync(int topCount = 50)
@@ -88,6 +93,11 @@ public class WorkRepository : IWorkRepository
 
     public async Task<IEnumerable<WorkEntity>> GetAllWorksAsync()
     {
-        return await _context.Works.ToListAsync();
+        return await _context.Works
+            .Include(w => w.Author)
+            .Include(w => w.Genre)
+            .Include(w => w.Comments)
+            .Include(w => w.Ratings)
+            .ToListAsync();
     }
 }

@@ -114,7 +114,8 @@ public class UserRepository : IUserRepository
             return false;
         }
 
-        _context.Users.Remove(user);
+        user.IsDeleted = true;
+        _context.Users.Update(user);
         await _context.SaveChangesAsync();
 
         return true;

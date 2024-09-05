@@ -21,7 +21,7 @@ public class CommentRepository : ICommentRepository
             UserId = userId,
             WorksId = workId,
             Text = comment,
-            CreatedAt = DateTime.UtcNow
+            CreatedAt = DateTime.Now
         };
 
         _context.Comments.Add(newComment);
@@ -32,7 +32,11 @@ public class CommentRepository : ICommentRepository
 
     public async Task<IEnumerable<CommentEntity>> GetCommentsByWorkIdAsync(int workId)
     {
-        return await _context.Comments.Where(comment => comment.WorksId == workId).ToListAsync();
+        return await _context.Comments
+            .Include(c => c.User)
+            .IgnoreQueryFilters()
+            .Where(comment => comment.WorksId == workId)
+            .ToListAsync();
     }
 
     public async Task<bool> DeleteCommentAsync(int commentId)

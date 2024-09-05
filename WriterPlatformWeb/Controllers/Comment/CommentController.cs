@@ -16,9 +16,9 @@ public class CommentController : Controller
     }
 
 
-    [HttpPost("{workId}/add-comment")]
+    [HttpPost("{workId:int}/add-comment")]
     [Authorize]
-    public async Task<IActionResult> AddComment(int workId, [FromForm] string comment)
+    public async Task<IActionResult> AddComment([FromRoute] int workId, [FromForm] string comment)
     {
         var userDto = await _userService.GetUserIdAsync();
 
@@ -29,15 +29,14 @@ public class CommentController : Controller
 
         if (string.IsNullOrWhiteSpace(comment))
         {
-            TempData["ErrorMessage"] = "Комментарий не может быть пустым.";
-            return RedirectToAction("GetWorkDetails", "Work", new { workId });
+            return Json(new { success = false, message = "Комментарий не может быть пустым." });
         }
 
-        await _commentService.AddCommentAsync(workId, userDto.UserId, comment);
+        var newComment = await _commentService.AddCommentAsync(workId, userDto.UserId, comment);
 
-        TempData["SuccessMessage"] = "Комментарий успешно добавлен.";
-        return RedirectToAction("GetWorkDetails", "Work", new { workId });
+        return Json(new { success = true, username = userDto.UserName, comment = newComment.Comment });
     }
+
 
     [HttpPost("{workId}/delete-comment/{commentId}")]
     [Authorize(Roles = "Администратор,Administrator,Admin")]

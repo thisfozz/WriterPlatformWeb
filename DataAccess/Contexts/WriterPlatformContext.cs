@@ -30,6 +30,8 @@ public partial class WriterPlatformContext : DbContext
         modelBuilder.ApplyConfiguration(new UserConfiguration());
         modelBuilder.ApplyConfiguration(new WorkConfiguration());
 
+        modelBuilder.Entity<UserEntity>().HasQueryFilter(u => u.IsDeleted == false || u.IsDeleted == null);
+
         OnModelCreatingPartial(modelBuilder);
     }
 
