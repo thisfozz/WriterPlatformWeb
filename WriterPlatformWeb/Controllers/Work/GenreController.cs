@@ -15,7 +15,7 @@ public class GenreController : Controller
     }
 
     [HttpPost("create-genre")]
-    [Authorize(Roles = "Администратор,Administrator")]
+    [Authorize]
     public async Task<IActionResult> CreateGenre([FromForm] string genreName)
     {
         if(string.IsNullOrWhiteSpace(genreName))

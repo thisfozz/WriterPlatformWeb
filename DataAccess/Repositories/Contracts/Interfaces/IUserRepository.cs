@@ -12,5 +12,6 @@ public interface IUserRepository
     Task<bool> UpdateEmailAsync(Guid userId, string newEmail);
     Task<bool> UpdatePasswordAsync(Guid userId, string password);
     Task<bool> UpdateUserRoleAsync(string login, int newRoleId);
+    Task<bool> UpdateUsernameAsync(Guid userId, string username);
     Task<bool> DeleteUserAsync(Guid userId);
 }

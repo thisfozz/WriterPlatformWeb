@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using WriterPlatformWeb.Models.ViewModel;
 using WriterPlatformWeb.Models.ViewModel.Work;
 using WriterPlatformWeb.Services.Contracts.Interfaces;
 
@@ -60,22 +59,20 @@ public class WorkController : Controller
             Genres = genres
         };
 
-        return View("PublishWorkForm", viewModel); // НЕ ЗАБЫТЬ СОЗДАТЬ ПРЕДСТАВЛЕНИЕ
+        return View("PublishWorkForm", viewModel);
     }
 
-
-    // Обработать отправленную форму для создания нового произведения
     [HttpPost("publish")]
     [Authorize]
     public async Task<IActionResult> PublishWork(PublishWorkViewModel model)
     {
-        if (!ModelState.IsValid)
-        {
-            model.Authors = await _authorService.GetAllAuthorsAsync();
-            model.Genres = await _genreService.GetAllGenresAsync();
+        //if (!ModelState.IsValid)
+        //{
+        //    model.Authors = await _authorService.GetAllAuthorsAsync();
+        //    model.Genres = await _genreService.GetAllGenresAsync();
 
-            return View("PublishWorkForm", model);
-        }
+        //    return View("PublishWorkForm", model);
+        //}
 
         var work = await _workService.PublishWorkAsync(model.Work.Title, model.SelectedGenreId, model.SelectedAuthorId, model.Work.PublicationDate, model.Work.Text);
 

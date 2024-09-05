@@ -80,6 +80,7 @@ public class Startup
 
         app.UseStatusCodePages();
         app.UseStaticFiles();
+
         app.UseRouting();
 
         app.UseAuthentication();

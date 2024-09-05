@@ -87,11 +87,17 @@ public class UserService : IUserService
         return await _userRepository.DeleteUserAsync(userId);
     }
 
-    public async Task<UserDTO?> GetUserByIdAsync()
+    public async Task<UserDTO?> GetUserIdAsync()
     {
         var userId = GetCurrentUserId();
         var user = await _userRepository.GetUserByIdAsync(userId);
         return _mapper.Map<UserDTO>(user);
+    }
+
+    public async Task<bool> UpdateUsernameAsync(string username)
+    {
+        var userId = GetCurrentUserId();
+        return await _userRepository.UpdateUsernameAsync(userId, username);
     }
 
     public async Task<bool> UpdateEmailAsync(string newEmail)

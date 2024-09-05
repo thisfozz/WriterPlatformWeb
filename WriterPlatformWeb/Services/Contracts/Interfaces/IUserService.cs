@@ -11,9 +11,10 @@ public interface IUserService
 
     Task<bool> DeleteUserAsync();
 
-    Task<UserDTO?> GetUserByIdAsync();
+    Task<UserDTO?> GetUserIdAsync();
 
     Task<bool> UpdateEmailAsync(string newEmail);
     Task<bool> UpdatePasswordAsync(string password);
+    Task<bool> UpdateUsernameAsync(string username);
     Task<bool> UpdateUserRoleAsync(string login, int newRoleId);
 }

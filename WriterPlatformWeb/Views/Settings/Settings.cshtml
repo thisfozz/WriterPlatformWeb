@@ -1,0 +1,55 @@
+﻿@using WriterPlatformWeb.Models.ViewModel.User;
+@model UserViewModel;
+
+<div class="container">
+    <div class="user-settings-form custom-fonts mt-4 mx-auto" style="max-width: 500px;">
+        <div class="text-center mt-4">
+            <img src="/img/main_logo.png" alt="Logo" style="width: 170px; height: auto;">
+            <h2 class="custom-fonts mt-3">Настройки пользователя</h2>
+        </div>
+
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success mt-3">
+                @TempData["SuccessMessage"]
+            </div>
+            <script>
+                setTimeout(function () {
+                    window.location.href = '@Url.Action("Index", "Home")';
+                }, 4000);
+            </script>
+        }
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-danger mt-3">
+                @TempData["ErrorMessage"]
+            </div>
+        }
+
+        <form asp-action="UpdateSettings" method="post" class="mt-4">
+            <div class="form-group">
+                <label asp-for="UserName"></label>
+                <input asp-for="UserName" class="form-control custom-fonts" />
+                <span asp-validation-for="UserName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-3">
+                <label asp-for="Email"></label>
+                <input asp-for="Email" class="form-control custom-fonts" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-3">
+                <label asp-for="RoleName"></label>
+                <input asp-for="RoleName" class="form-control custom-fonts" readonly />
+                <span asp-validation-for="RoleName" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary custom-fonts mt-4">Сохранить изменения</button>
+
+            <div class="form-group mt-3">
+                <a asp-action="Index" asp-controller="Home" class="custom-fonts">Вернуться на главную</a>
+            </div>
+        </form>
+    </div>
+</div>
