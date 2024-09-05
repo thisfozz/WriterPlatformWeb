@@ -13,28 +13,25 @@ public class WorkController : Controller
     private readonly IGenreService _genreService;
     private readonly IAuthorService _authorService;
     private readonly ICommentService _commentService;
-    private readonly IMapper _mapper;
 
-    public WorkController(IWorkService workService, IGenreService genreService, IAuthorService authorService, ICommentService commentService, IMapper mapper)
+    public WorkController(IWorkService workService, IGenreService genreService, IAuthorService authorService, ICommentService commentService)
     {
         _workService = workService;
         _genreService = genreService;
         _authorService = authorService;
         _commentService = commentService;
-        _mapper = mapper;
     }
 
-    // Показать детали конкретного произведения
-    [HttpGet("{workId}")]
-    public async Task<IActionResult> GetWorkDetails(int workId)
+    [HttpGet("{id:int}")]
+    public async Task<IActionResult> GetWorkDetails([FromRoute] int id)
     {
-        var work = await _workService.GetWorkByIdAsync(workId);
+        var work = await _workService.GetWorkByIdAsync(id);
         if (work == null)
         {
             return NotFound();
         }
 
-        var comments = await _commentService.GetCommentsByWorkIdAsync(workId);
+        var comments = await _commentService.GetCommentsByWorkIdAsync(id);
 
         var viewModel = new WorkDetailsViewModel
         {
@@ -42,7 +39,7 @@ public class WorkController : Controller
             Comments = comments.ToArray()
         };
 
-        return View("WorkDetails", viewModel); // НЕ ЗАБЫТЬ СОЗДАТЬ ВЬЮШКУ В КОТОРОЙ БУДЕТ ИСПОЛЬЗОВАН WorkDetailsViewModel
+        return View("WorkDetails", viewModel);
     }
 
     // Показать форму для создания нового произведения
@@ -66,13 +63,6 @@ public class WorkController : Controller
     [Authorize]
     public async Task<IActionResult> PublishWork(PublishWorkViewModel model)
     {
-        //if (!ModelState.IsValid)
-        //{
-        //    model.Authors = await _authorService.GetAllAuthorsAsync();
-        //    model.Genres = await _genreService.GetAllGenresAsync();
-
-        //    return View("PublishWorkForm", model);
-        //}
 
         var work = await _workService.PublishWorkAsync(model.Work.Title, model.SelectedGenreId, model.SelectedAuthorId, model.Work.PublicationDate, model.Work.Text);
 

@@ -47,17 +47,18 @@ public class MappingProfile : Profile
             .ForMember(dest => dest.Ratings, opt => opt.MapFrom(src => src.Ratings));
 
         CreateMap<WorkEntity, WorkDTO>()
+            .ForMember(dest => dest.WorkId, opt => opt.MapFrom(src => src.WorksId))
+            .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title))
             .ForMember(dest => dest.GenreName, opt => opt.MapFrom(src => src.Genre.Name))
-            .ForMember(dest => dest.AuthorName, opt => opt.MapFrom(src => src.Author.FirstName + " " + src.Author.LastName))
-            .ForMember(dest => dest.Author, opt => opt.MapFrom(src => src.Author))
-            .ForMember(dest => dest.Genre, opt => opt.MapFrom(src => src.Genre))
+            .ForMember(dest => dest.AuthorName, opt => opt.MapFrom(src => $"{src.Author.FirstName} {src.Author.LastName}"))
+            .ForMember(dest => dest.PublicationDate, opt => opt.MapFrom(src => src.PublicationDate))
+            .ForMember(dest => dest.Text, opt => opt.MapFrom(src => src.Text))
+            .ForMember(dest => dest.AverageRating, opt => opt.MapFrom(src => src.AverageRating))
             .ForMember(dest => dest.Comments, opt => opt.MapFrom(src => src.Comments))
             .ForMember(dest => dest.Ratings, opt => opt.MapFrom(src => src.Ratings))
-            .ReverseMap()
-            .ForMember(dest => dest.Genre, opt => opt.MapFrom(src => src.Genre))
             .ForMember(dest => dest.Author, opt => opt.MapFrom(src => src.Author))
-            .ForMember(dest => dest.Comments, opt => opt.MapFrom(src => src.Comments))
-            .ForMember(dest => dest.Ratings, opt => opt.MapFrom(src => src.Ratings));
+            .ForMember(dest => dest.Genre, opt => opt.MapFrom(src => src.Genre))
+            .ReverseMap();
 
         CreateMap<WorkDTO, WorkViewModel>()
            .ForMember(dest => dest.AverageRating, opt => opt.MapFrom(src => src.AverageRating ?? 0));

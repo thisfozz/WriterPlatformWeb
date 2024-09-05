@@ -388,3 +388,115 @@ body {
 .user-settings-form a:hover {
   color: #ffffff;
 }
+
+
+.book-details-section {
+  width: 100%;
+  margin-top: 30px;
+  background-color: #1e1e1e;
+  color: #d8d8d8;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.book-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.book-details .row {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.book-details .col-md-4,
+.book-details .col-md-8 {
+  padding: 15px;
+}
+
+.book-details img {
+  width: 100%;
+  height: auto;
+  border-radius: 5px;
+  background-color: #333;
+}
+
+.book-details h1,
+.book-details h4,
+.book-details h5,
+.book-details p {
+  margin: 10px 0;
+}
+
+.book-details h1 {
+  font-size: 2em;
+}
+
+.book-details h4 {
+  font-size: 1.5em;
+}
+
+.book-details h5 {
+  font-size: 1.2em;
+}
+
+.book-details .book-text p {
+  font-size: 1em;
+  line-height: 1.6;
+}
+
+.book-details .book-comments {
+  margin-top: 20px;
+}
+
+.book-details .comment {
+  margin-bottom: 10px;
+}
+
+.book-details .comment p {
+  margin: 0;
+  font-size: 1em;
+}
+
+.book-details-footer {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.book-details-footer .btn {
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+.book-details-footer .btn:hover {
+  background-color: #0056b3;
+  border-color: #004085;
+}
+
+.book-details-footer .custom-fonts {
+  font-family: "Exo 2", sans-serif;
+}
+
+
+.custom-modal-content {
+    background-color: #1e1e1e;
+    color: #d8d8d8;
+    border-radius: 10px; 
+}
+
+.custom-modal-header {
+    border-bottom: 1px solid #444;
+    background-color: #202020;
+    color: #d8d8d8;
+}
+
+.custom-modal-body {
+    background-color: #1e1e1e;
+    color: #d8d8d8;
+}
+
+/* Ноги модального окна */
+.custom-modal-footer {
+    border-top: 1px solid #444;
+    background-color: #202020;
+}
