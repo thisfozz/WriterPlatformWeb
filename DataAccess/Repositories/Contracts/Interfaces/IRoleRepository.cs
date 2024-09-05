@@ -7,4 +7,5 @@ public interface IRoleRepository
     Task<bool> CreateRoleAsync(string roleName);
     Task<RoleEntity?> GetRoleByIdAsync(int roleId);
     Task<IEnumerable<RoleEntity>> GetAllRolesAsync();
+    Task<int> GetIdRoleByName(string roleName);
 }

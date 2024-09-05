@@ -39,18 +39,20 @@ public class UserService : IUserService
 
         var userId = Guid.NewGuid();
         var hashedPassword = SHA256Manager.GenerateSaltedHash(registerModel.Password, userId.ToString());
+        var roleId = await _roleRepository.GetIdRoleByName("User");
         var userEntity = new UserEntity
         {
             UserId = userId,
             Login = registerModel.Login,
+            Email = registerModel.Email,
             PasswordHash = hashedPassword,
-            RoleId = 1 //Дефолтный ID роли для новых пользователей
+            RoleId = roleId
         };
 
-        var role = await _roleRepository.GetRoleByIdAsync(userEntity.RoleId);
-        var roleName = role?.Name ?? "User";
-
         await _userRepository.RegisterUserAsync(userEntity);
+
+        var role = await _roleRepository.GetRoleByIdAsync(roleId);
+        var roleName = role?.Name ?? "User";
         await SetupUserAuthenticationAsync(registerModel.Login, registerModel.Email, roleName);
 
         return true;
@@ -60,7 +62,17 @@ public class UserService : IUserService
     {
         var user = await _userRepository.GetUserByLoginOrEmailAsync(loginModel.LoginOrEmail);
 
-        return user != null && SHA256Manager.PasswordMath(loginModel.Password, user.UserId.ToString(), user.PasswordHash);
+        if (user != null && SHA256Manager.PasswordMath(loginModel.Password, user.UserId.ToString(), user.PasswordHash))
+        {
+            var role = await _roleRepository.GetRoleByIdAsync(user.RoleId);
+            var roleName = role?.Name ?? "User";
+
+            await SetupUserAuthenticationAsync(user.Login, user.Email, roleName);
+
+            return true;
+        }
+
+        return false;
     }
 
     public async Task<bool> LogoutAsync()
@@ -107,8 +119,10 @@ public class UserService : IUserService
 
     private async Task SetupUserAuthenticationAsync(string login, string email, string role)
     {
+        var user = await _userRepository.GetUserByLoginOrEmailAsync(login);
         var claims = new[]
         {
+            new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
             new Claim(ClaimTypes.Name, login),
             new Claim(ClaimTypes.Role, role),
             new Claim(ClaimTypes.Email, email)

@@ -1,8 +1,11 @@
 ﻿@using WriterPlatformWeb.Models.Auth;
 @model RegisterModel;
 
-@{
-	ViewData["Title"] = "Регистрация";
+@if (User.Identity.IsAuthenticated)
+{
+    <script>
+        window.location.href = '@Url.Action("Index", "Home")';
+    </script>
 }
 
 <div class="container">

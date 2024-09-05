@@ -2,6 +2,7 @@
 using DataAccess.Contexts;
 using DataAccess.Repositories.Contracts.Interfaces;
 using DataAccess.Repositories.Implementations;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using WriterPlatformWeb.Services.Contracts.Interfaces;
 using WriterPlatformWeb.Services.Implementations;
@@ -51,6 +52,14 @@ public class Startup
         services.AddScoped<IRoleService, RoleService>();
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IWorkService, WorkService>();
+
+        services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+            .AddCookie(opt =>
+            {
+                opt.LoginPath = new PathString(CookieAuthenticationDefaults.LoginPath);
+                opt.LogoutPath = new PathString(CookieAuthenticationDefaults.LogoutPath);
+                opt.AccessDeniedPath = new PathString(CookieAuthenticationDefaults.AccessDeniedPath);
+            });
 
         services.AddEndpointsApiExplorer();
         services.AddMvc();
