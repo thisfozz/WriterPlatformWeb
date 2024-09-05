@@ -1,6 +1,13 @@
 ﻿@using WriterPlatformWeb.Models.Auth;
 @model LoginModel;
 
+@if (User.Identity.IsAuthenticated)
+{
+    <script>
+        window.location.href = '@Url.Action("Index", "Home")';
+    </script>
+}
+
 <div class="container">
     <div class="registration-form custom-fonts mt-4 mx-auto" style="max-width: 400px;">
         <div class="text-center mt-4">

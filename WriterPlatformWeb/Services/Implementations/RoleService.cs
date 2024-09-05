@@ -31,4 +31,9 @@ public class RoleService : IRoleService
         var roles = await _roleRepository.GetAllRolesAsync();
         return roles.Select(r => _mapper.Map<RoleDTO>(r)).ToList();
     }
+
+    public async Task<int> GetIdRoleByName(string roleName)
+    {
+        return await _roleRepository.GetIdRoleByName(roleName);
+    }
 }
