@@ -1,0 +1,158 @@
+﻿@using WriterPlatformWeb.Models.ViewModel.Work;
+@model PublishWorkViewModel;
+
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg header">
+            <a asp-action="Index" asp-controller="Home">
+                <div class="navbar-brand">
+                    <img src="/img/main_logo.png" alt="Logo">
+                </div>
+            </a>
+            <div class="separator"></div>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a asp-action="Index" asp-controller="Home" class="nav-link custom-fonts">Магазин</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a asp-action="PublishWorkForm" asp-controller="Work" class="nav-link custom-fonts">Опубликовать</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a asp-action="Register" asp-controller="User">
+                            <img src="/img/user_icon.png" alt="User Icon" style="width: 30px; height: 30px;">
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Контейнер для центрирования формы по вертикали и горизонтали -->
+    <div class="container">
+        <div class="registration-form custom-fonts mt-4 mx-auto" style="max-width: 600px;">
+            <div class="text-center mt-4">
+                <img src="/img/main_logo.png" alt="Logo" style="width: 170px; height: auto;">
+                <h2 class="custom-fonts mt-3">Опубликовать произведение</h2>
+            </div>
+
+            <!-- Сообщение об успешной публикации или ошибке -->
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+            }
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+            }
+
+            <form asp-action="PublishWork" method="post" class="mt-4">
+                <div class="form-group">
+                    <label for="Title">Название произведения</label>
+                    <input type="text" class="form-control custom-fonts" id="Title" name="Work.Title" value="@Model.Work.Title" required />
+                </div>
+
+                <div class="form-group">
+                    <label for="SelectedGenreId">Жанр</label>
+                    <select class="form-control custom-fonts" id="SelectedGenreId" name="SelectedGenreId" required>
+                        <option value="">Выберите жанр</option>
+                        @foreach (var genre in Model.Genres)
+                        {
+                            <option value="@genre.GenreId">@genre.GenreName</option>
+                        }
+                    </select>
+                </div>
+
+                <button type="button" class="btn btn-outline-light custom-fonts" data-bs-toggle="modal" data-bs-target="#createModalGenre" style="border: 1px solid gray;">
+                    Нет нужного жанра
+                </button>
+
+                <div class="form-group">
+                    <label for="SelectedAuthorId">Автор</label>
+                    <select class="form-control custom-fonts" id="SelectedAuthorId" name="SelectedAuthorId" required>
+                        <option value="">Выберите автора</option>
+                        @foreach (var author in Model.Authors)
+                        {
+                            <option value="@author.AuthorId">@author.FirstName @author.LastName</option>
+                        }
+                    </select>
+                </div>
+
+                <button type="button" class="btn btn-outline-light custom-fonts" data-bs-toggle="modal" data-bs-target="#createModalAuthor" style="border: 1px solid gray;">
+                    Нет нужного автора
+                </button>
+
+
+                <div class="form-group">
+                    <label for="PublicationDate">Дата публикации</label>
+                    <input type="text" class="form-control custom-fonts" id="PublicationDate" name="Work.PublicationDate" value="@DateTime.Now.ToString("yyyy-MM-dd")" readonly />
+                </div>
+
+                <div class="form-group">
+                    <label for="Text">Текст произведения</label>
+                    <textarea class="form-control custom-fonts" id="Text" name="Work.Text" rows="10" required>@Model.Work.Text</textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary custom-fonts mt-4">Опубликовать</button>
+            </form>
+        </div>
+    </div>
+</body>
+
+<!-- Модальное окно для создания жанра -->
+<div class="modal fade" id="createModalGenre" tabindex="-1" role="dialog" aria-labelledby="createModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" style="background-color: #1e1e1e; color: #d8d8d8;">
+            <div class="modal-header">
+                <h5 class="modal-title custom-fonts" id="createModalLabel">Создать жанр</h5>
+            </div>
+            <div class="modal-body">
+                <form id="createGenreForm" method="post" asp-action="CreateGenre" asp-controller="Genre">
+                    <div class="form-group">
+                        <label for="newGenreName" class="custom-fonts">Название жанра</label>
+                        <input type="text" class="form-control custom-fonts" id="newGenreName" name="genreName" required>
+                    </div>
+                    <button type="submit" class="btn btn-outline-light custom-fonts" style="border: 1px solid gray;">Создать жанр</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Модальное окно для создания автора -->
+<div class="modal fade" id="createModalAuthor" tabindex="-1" role="dialog" aria-labelledby="createModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" style="background-color: #1e1e1e; color: #d8d8d8;">
+            <div class="modal-header">
+                <h5 class="modal-title custom-fonts" id="createModalLabel">Создать автора</h5>
+            </div>
+            <div class="modal-body">
+                <form id="createAuthorForm" method="post" asp-action="AddAuthor" asp-controller="Authors">
+                    <div class="form-group">
+                        <label for="newAuthorFirstName" class="custom-fonts">Имя автора</label>
+                        <input type="text" class="form-control custom-fonts" id="newAuthorFirstName" name="firstName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="newAuthorLastName" class="custom-fonts">Фамилия автора</label>
+                        <input type="text" class="form-control custom-fonts" id="newAuthorLastName" name="lastName" required>
+                    </div>
+                    <button type="submit" class="btn btn-outline-light custom-fonts" style="border: 1px solid gray;">Создать автора</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Форма для создания жанра -->
+<form id="createGenreForm" method="post" asp-action="CreateGenre" asp-controller="Genre">
+    <div class="form-group">
+        <label for="newGenreName" class="custom-fonts">Название жанра</label>
+        <input type="text" class="form-control custom-fonts" id="newGenreName" name="genreName" required>
+    </div>
+    <button type="submit" class="btn btn-outline-light custom-fonts" style="border: 1px solid gray;">Создать жанр</button>
+</form>

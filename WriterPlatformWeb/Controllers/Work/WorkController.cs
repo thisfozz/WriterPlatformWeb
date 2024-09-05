@@ -69,13 +69,13 @@ public class WorkController : Controller
     [Authorize]
     public async Task<IActionResult> PublishWork(PublishWorkViewModel model)
     {
-        if (!ModelState.IsValid)
-        {
-            model.Authors = await _authorService.GetAllAuthorsAsync();
-            model.Genres = await _genreService.GetAllGenresAsync();
+        //if (!ModelState.IsValid)
+        //{
+        //    model.Authors = await _authorService.GetAllAuthorsAsync();
+        //    model.Genres = await _genreService.GetAllGenresAsync();
 
-            return View("PublishWorkForm", model);
-        }
+        //    return View("PublishWorkForm", model);
+        //}
 
         var work = await _workService.PublishWorkAsync(model.Work.Title, model.SelectedGenreId, model.SelectedAuthorId, model.Work.PublicationDate, model.Work.Text);
 

@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
-using WriterPlatformWeb.Models.Work;
+﻿using WriterPlatformWeb.Models.Work;
 
 namespace WriterPlatformWeb.Models.ViewModel.Work;
 
