@@ -87,6 +87,12 @@ public class UserService : IUserService
         return await _userRepository.DeleteUserAsync(userId);
     }
 
+    public async Task<List<UserDTO>> GetAllUsersAsync()
+    {
+        var users = await _userRepository.GetAllUsersAsync();
+        return users.Select(u => _mapper.Map<UserDTO>(u)).ToList();
+    }
+
     public async Task<UserDTO?> GetUserIdAsync()
     {
         var userId = GetCurrentUserId();

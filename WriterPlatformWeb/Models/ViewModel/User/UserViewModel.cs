@@ -1,4 +1,6 @@
-﻿namespace WriterPlatformWeb.Models.ViewModel.User;
+﻿using WriterPlatformWeb.Models.Work;
+
+namespace WriterPlatformWeb.Models.ViewModel.User;
 
 public class UserViewModel
 {

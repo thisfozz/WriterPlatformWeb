@@ -120,4 +120,9 @@ public class UserRepository : IUserRepository
 
         return true;
     }
+
+    public async Task<List<UserEntity>> GetAllUsersAsync()
+    {
+        return await _context.Users.ToListAsync();
+    }
 }

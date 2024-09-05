@@ -1,0 +1,92 @@
+﻿@using WriterPlatformWeb.Models.ViewModel.Admin;
+@model AdminViewModel;
+
+
+<div class="admin-dashboard">
+    <h1>Админ Панель</h1>
+
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#roleModal">
+        Управление ролями
+    </button>
+
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#authorModal">
+        Управление авторами
+    </button>
+
+    <div class="modal fade" id="roleModal" tabindex="-1" aria-labelledby="roleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content custom-modal-content">
+                <div class="modal-header custom-modal-header">
+                    <h5 class="modal-title" id="roleModalLabel">Управление ролями</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body custom-modal-body">
+                    <form method="post" asp-action="CreateRole" asp-controller="Role">
+                        <div class="mb-3">
+                            <label for="roleName" class="form-label">Создать роль</label>
+                            <input type="text" class="form-control" id="roleName" name="roleName" required />
+                        </div>
+                        <button type="submit" class="btn btn-primary">Создать</button>
+                    </form>
+
+                    <form method="post" asp-action="UpdateRole" asp-controller="Role" class="mt-4">
+                        <div class="mb-3">
+                            <label for="login" class="form-label">Логин пользователя</label>
+                            <input type="text" class="form-control" id="login" name="login" required />
+                        </div>
+                        <div class="mb-3">
+                            <label for="roleSelect" class="form-label">Выберите роль</label>
+                            <select class="form-select" id="roleSelect" name="roleId" required>
+                                @foreach (var role in Model.Roles)
+                                {
+                                    <option value="@role.RoleId">@role.RoleName</option>
+                                }
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Назначить роль</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="authorModal" tabindex="-1" aria-labelledby="authorModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content custom-modal-content">
+                <div class="modal-header custom-modal-header">
+                    <h5 class="modal-title" id="authorModalLabel">Управление авторами</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body custom-modal-body">
+                    <h6>Добавить автора:</h6>
+                    <form method="post" asp-action="AddAuthor" asp-controller="Authors">
+                        <div class="mb-3">
+                            <label for="firstName" class="form-label">Имя автора</label>
+                            <input type="text" class="form-control" id="firstName" name="firstName" required />
+                        </div>
+                        <div class="mb-3">
+                            <label for="lastName" class="form-label">Фамилия автора</label>
+                            <input type="text" class="form-control" id="lastName" name="lastName" required />
+                        </div>
+                        <button type="submit" class="btn btn-primary">Добавить</button>
+                    </form>
+
+                    <h6 class="mt-4">Авторы:</h6>
+                    <ul class="list-group mb-3">
+                        @foreach (var author in Model.Authors)
+                        {
+                            <li class="list-group-item">
+                                @author.FirstName @author.LastName
+                                <form method="post" asp-action="DeleteAuthor" asp-controller="Authors" class="d-inline float-end">
+                                    <input type="hidden" name="authorId" value="@author.AuthorId" />
+                                    <button type="submit" class="btn btn-danger btn-sm">Удалить</button>
+                                </form>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

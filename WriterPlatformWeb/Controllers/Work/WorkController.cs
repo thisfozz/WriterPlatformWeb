@@ -42,7 +42,6 @@ public class WorkController : Controller
         return View("WorkDetails", viewModel);
     }
 
-    // Показать форму для создания нового произведения
     [HttpGet("publish")]
     [Authorize]
     public async Task<IActionResult> PublishWorkForm()

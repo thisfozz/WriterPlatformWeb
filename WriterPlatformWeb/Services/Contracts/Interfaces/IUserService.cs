@@ -5,6 +5,8 @@ namespace WriterPlatformWeb.Services.Contracts.Interfaces;
 
 public interface IUserService
 {
+    Task<List<UserDTO>> GetAllUsersAsync();
+
     Task<bool> RegisterUserAsync(RegisterModel registerModel);
     Task<bool> AuthenticateUserAsync(LoginModel loginModel);
     Task<bool> LogoutAsync();

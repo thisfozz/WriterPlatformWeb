@@ -1,55 +1,46 @@
 ﻿@using WriterPlatformWeb.Models.ViewModel.Work;
 @model List<WorkViewModel>;
 
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-</head>
-    <body>
-        <div class="main-content">
-            <div class="css-1s8sirz">
-                <div class="test_class_left">
-                    <div class="search-container">
-                        <div class="css-g5baae">
-                            <img src="./img/magnifying_icon.png" alt="Search Icon" class="search-icon" />
-                            <div class="css-qdcmcm">
-                                <div class="css-trzy6k">
-                                    <input class="custom-fonts" type="text" placeholder="Искать в магазине" />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="test_class_left">
-                        <div class="body-items">
-                            <a asp-action="Index" asp-controller="Home" class="custom-fonts">Главная</a>
+<div class="main-content">
+    <div class="css-1s8sirz">
+        <div class="test_class_left">
+            <div class="search-container">
+                <div class="css-g5baae">
+                    <img src="./img/magnifying_icon.png" alt="Search Icon" class="search-icon" />
+                    <div class="css-qdcmcm">
+                        <div class="css-trzy6k">
+                            <input class="custom-fonts" type="text" placeholder="Искать в магазине" />
                         </div>
                     </div>
                 </div>
             </div>
-
-            <div class="book-collection-section">
-                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-6 g-4">
-                    @foreach (var work in Model)
-                    {
-                        <div class="col">
-                            <div class="card h-100">
-                                <img src="/img/default-book.png" class="card-img-top" alt="Обложка книги">
-                                <div class="card-body">
-                                    <h5 class="card-title">@work.Title</h5>
-                                    <p class="card-text">Автор: @work.AuthorName</p>
-                                    <p class="card-text">Рейтинг: @work.AverageRating</p>
-                                </div>
-                                <div class="card-footer">
-                                    <a asp-action="GetWorkDetails" asp-controller="Work" asp-route-id="@work.WorkId" class="btn btn-primary">Подробнее</a>
-                                    <a asp-action="Read" asp-controller="Work" asp-route-id="@work.WorkId" class="btn btn-success">Читать</a>
-                                </div>
-                            </div>
-                        </div>
-                    }
+            <div class="test_class_left">
+                <div class="body-items">
+                    <a asp-action="Index" asp-controller="Home" class="custom-fonts">Главная</a>
                 </div>
             </div>
         </div>
-    </body>
-</html>
+    </div>
+
+    <div class="book-collection-section">
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-6 g-4">
+            @foreach (var work in Model)
+            {
+                <div class="col">
+                    <div class="card h-100">
+                        <img src="/img/default-book.png" class="card-img-top" alt="Обложка книги">
+                        <div class="card-body">
+                            <h5 class="card-title">@work.Title</h5>
+                            <p class="card-text">Автор: @work.AuthorName</p>
+                            <p class="card-text">Рейтинг: @work.AverageRating</p>
+                        </div>
+                        <div class="card-footer">
+                            <a asp-action="GetWorkDetails" asp-controller="Work" asp-route-id="@work.WorkId" class="btn btn-primary">Подробнее</a>
+                            <a asp-action="Read" asp-controller="Work" asp-route-id="@work.WorkId" class="btn btn-success">Читать</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

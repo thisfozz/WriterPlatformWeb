@@ -36,7 +36,15 @@ public class AuthorRepository : IAuthorRepository
         {
             return false;
         }
-        _context.Authors.Remove(author);
+
+        author.FirstName = "Неизвестный";
+        author.LastName = "Автор";
+
+        foreach (var work in author.Works)
+        {
+            work.Author = author;
+        }
+
         await _context.SaveChangesAsync();
 
         return true;

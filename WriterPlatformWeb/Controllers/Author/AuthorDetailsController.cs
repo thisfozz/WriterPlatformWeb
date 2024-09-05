@@ -49,23 +49,4 @@ public class AuthorDetailsController : Controller
 
         return RedirectToAction("Dashboard", "Admin");
     }
-
-    [HttpPost("details-author")]
-    public async Task<IActionResult> DetailsAuthor([FromForm] int authorId)
-    {
-        if (authorId <= 0)
-        {
-            TempData["ErrorMessage"] = "Некорректный идентификатор автора.";
-            return RedirectToAction("ManageAuthors", "Authors");
-        }
-
-        var author = await _authorService.GetAuthorByIdAsync(authorId);
-
-        if (author == null)
-        {
-            return NotFound();
-        }
-
-        return View(author); // НЕ ЗАБЫТЬ СОЗДАТЬ ПРЕДСТАВЛЕНИЕ ДЛЯ ВОЗВРАТА ДЕТАЛЕЙ АВТОРА
-    }
 }

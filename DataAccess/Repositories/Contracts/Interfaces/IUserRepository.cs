@@ -8,6 +8,7 @@ public interface IUserRepository
     Task<bool> IsUserRegisteredByLoginAsync(string login);
 
     Task<UserEntity?> GetUserByIdAsync(Guid userId);
+    Task<List<UserEntity>> GetAllUsersAsync();
     Task<UserEntity?> GetUserByLoginOrEmailAsync(string loginOrEmail);
     Task<bool> UpdateEmailAsync(Guid userId, string newEmail);
     Task<bool> UpdatePasswordAsync(Guid userId, string password);

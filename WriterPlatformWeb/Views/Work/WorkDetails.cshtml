@@ -69,13 +69,11 @@
                 data: formData,
                 success: function (response) {
                     if (response.success) {
-                        // Добавление нового комментария в список
                         $('#comments-list').append(
                             `<li class="comment-item">
                                 <p class="custom-fonts"><strong>${response.username}:</strong> ${response.comment}</p>
                             </li>`
                         );
-                        // Очистка формы
                         form[0].reset();
                     } else {
                         alert(response.message);

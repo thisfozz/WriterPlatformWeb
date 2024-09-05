@@ -28,9 +28,18 @@
                     </ul>
                 </div>
                 <ul class="navbar-nav ml-auto">
-                    @if (!User.Identity.IsAuthenticated)
+                    @if (User.Identity.IsAuthenticated)
                     {
-                    <li class="nav-item" style="margin-right: 30px;">
+                        if (User.IsInRole("Администратор") || User.IsInRole("Administrator"))
+                        {
+                            <li class="nav-item" style="margin-right: 30px;">
+                                <a asp-action="Dashboard" asp-controller="Admin" class="btn btn-outline-light">Админ панель</a>
+                            </li>
+                        }
+                    }
+                    else
+                    {
+                        <li class="nav-item" style="margin-right: 30px;">
                             <a asp-action="Login" asp-controller="User" class="btn btn-outline-light">Войти</a>
                         </li>
                     }
@@ -41,7 +50,7 @@
                     </li>
                     @if (User.Identity.IsAuthenticated)
                     {
-                    <form asp-action="Logout" asp-controller="User" method="post" style="margin-left: 30px;">
+                        <form asp-action="Logout" asp-controller="User" method="post" style="margin-left: 30px;">
                             <button type="submit" class="btn btn-outline-light">Выйти</button>
                         </form>
                     }
