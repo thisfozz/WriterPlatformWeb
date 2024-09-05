@@ -18,23 +18,28 @@
   background-color: #202020;
   transition: background-color 0.3s;
 }
+
 .css-g5baae:hover {
   background-color: #333333;
 }
+
 .css-g5baae:focus-within {
   background-color: #404044;
 }
+
 .search-icon {
   width: 19px;
   height: 19px;
   margin: 0 10px;
 }
+
 .css-qdcmcm {
   display: flex;
   flex-shrink: 0;
   height: 100%;
   width: 100%;
 }
+
 .css-trzy6k {
   align-items: center;
   display: flex;
@@ -42,12 +47,14 @@
   width: 100%;
   padding-bottom: 2px;
 }
+
 .search-container,
 .body-items {
   display: flex;
   align-items: center;
   gap: 30px;
 }
+
 input {
   margin: 0;
   border: 0;
@@ -65,6 +72,7 @@ input {
   color: #d8d8d8;
   padding: 0 10px;
 }
+
 input:focus {
   outline: none;
 }
@@ -74,7 +82,9 @@ header {
   height: 80px;
   max-height: 80px;
   background-color: #18181c;
+  width: 100%;
 }
+
 .header {
   display: flex;
   justify-content: space-between;
@@ -82,22 +92,32 @@ header {
   height: 100%;
   color: white;
   padding: 0 20px;
+  position: relative;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  background-color: #18181c;
 }
+
 .header .navbar-nav {
   display: flex;
   align-items: center;
 }
+
 .header .navbar-nav .nav-link {
   color: #d8d8d8;
   margin: 0 10px;
   display: flex;
   align-items: center;
 }
+
 .header .navbar-nav .nav-link img {
   width: 30px;
   height: 30px;
   margin: 0;
 }
+
 .header .navbar-nav .circle {
   width: 30px;
   height: 30px;
@@ -107,15 +127,18 @@ header {
   align-items: center;
   overflow: hidden;
 }
+
 .header .navbar-nav .circle img {
   max-width: 100%;
   max-height: 100%;
 }
+
 .header .navbar-brand img {
   height: 60px;
   padding-bottom: 10px;
   padding-left: 15px;
 }
+
 .navbar-nav-center {
   position: absolute;
   left: 50%;
@@ -137,6 +160,7 @@ header {
   padding: 10px 20px;
   letter-spacing: 1px;
 }
+
 .nav-link::before {
   content: "";
   position: absolute;
@@ -149,6 +173,7 @@ header {
   box-sizing: border-box;
   border-radius: 24px;
 }
+
 .nav-link:hover::before {
   border-color: #404044;
 }
@@ -170,6 +195,7 @@ body {
   width: 80%;
   margin: 30px auto;
   max-width: 1600px;
+  padding-top: 100px;
 }
 
 /* Расположение блоков в строке */
@@ -180,6 +206,7 @@ body {
   margin-top: 25px;
   gap: 10px;
 }
+
 .test_class_left {
   display: flex;
   align-items: center;
@@ -191,11 +218,13 @@ body {
   width: 100%;
   margin-top: 30px;
 }
+
 .body-items a {
   color: #8c8c8c;
   text-decoration: none;
   transition: color 0.3 s;
 }
+
 .body-items a:hover {
   color: #ffffff;
 }
@@ -215,87 +244,147 @@ body {
   height: 200px;
   object-fit: cover;
 }
+
 .card-body {
   padding: 15px;
 }
+
 .card-title {
   font-size: 18px;
   margin-bottom: 10px;
 }
+
 .card-text {
   margin-bottom: 15px;
 }
+
 .btn-primary {
   background-color: #007bff;
   border-color: #007bff;
 }
+
 .btn-primary:hover {
   background-color: #0056b3;
   border-color: #004085;
 }
 
-
 /* РЕГИСТРАЦИЯ */
 .container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
 
 .registration-form {
-    width: 400px;
-    padding: 20px;
-    background-color: #1e1e1e;
-    color: #d8d8d8;
-    border-radius: 10px;
-    overflow: visible;
+  width: 400px;
+  padding: 20px;
+  background-color: #1e1e1e;
+  color: #d8d8d8;
+  border-radius: 10px;
+  overflow: visible;
 }
 
 .registration-form .form-group {
-    margin-bottom: 15px;
-
+  margin-bottom: 15px;
 }
 
 .registration-form label {
-    font-weight: bold;
-
+  font-weight: bold;
 }
 
 .registration-form .form-control {
-    background-color: #202020;
-    color: #d8d8d8;
-    border: 2px solid #444;
-    padding: 10px;
-    border-radius: 5px;
-    box-sizing: border-box;
+  background-color: #202020;
+  color: #d8d8d8;
+  border: 2px solid #444;
+  padding: 10px;
+  border-radius: 5px;
+  box-sizing: border-box;
 }
 
 .registration-form .form-control:focus {
-    background-color: #404044;
-    outline: none;
+  background-color: #404044;
+  outline: none;
 }
 
 .registration-form .btn-primary {
-    background-color: #007bff;
-    border-color: #007bff;
-    width: 100%;
-    transition: background-color 0.3s ease;
+  background-color: #007bff;
+  border-color: #007bff;
+  width: 100%;
+  transition: background-color 0.3s ease;
 }
 
 .registration-form .btn-primary:hover {
-    background-color: #0056b3;
-    border-color: #004085;
+  background-color: #0056b3;
+  border-color: #004085;
 }
 
 .registration-form a {
-    color: #8c8c8c;
-    text-decoration: none;
-    display: block;
-    margin-top: 10px;
-    text-align: center;
-    transition: color 0.3s;
-    }
+  color: #8c8c8c;
+  text-decoration: none;
+  display: block;
+  margin-top: 10px;
+  text-align: center;
+  transition: color 0.3s;
+}
+
 .registration-form a:hover {
-    color: #ffffff;
+  color: #ffffff;
+}
+
+/* ФОРМА НАСТРОЕК ПОЛЬЗОВАТЕЛЯ */
+.user-settings-form {
+  width: 500px;
+  padding: 20px;
+  background-color: #1e1e1e;
+  color: #d8d8d8;
+  border-radius: 10px;
+  overflow: visible;
+}
+
+.user-settings-form .form-group {
+  margin-bottom: 15px;
+}
+
+.user-settings-form label {
+  font-weight: bold;
+}
+
+.user-settings-form .form-control {
+  background-color: #202020;
+  color: #d8d8d8;
+  border: 2px solid #444;
+  padding: 10px;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+.user-settings-form .form-control:focus {
+  background-color: #404044;
+  outline: none;
+}
+
+.user-settings-form .btn-primary {
+  background-color: #007bff;
+  border-color: #007bff;
+  width: 100%;
+  transition: background-color 0.3s ease;
+}
+
+.user-settings-form .btn-primary:hover {
+  background-color: #0056b3;
+  border-color: #004085;
+}
+
+.user-settings-form a {
+  color: #8c8c8c;
+  text-decoration: none;
+  display: block;
+  margin-top: 10px;
+  text-align: center;
+  transition: color 0.3s;
+}
+
+.user-settings-form a:hover {
+  color: #ffffff;
 }

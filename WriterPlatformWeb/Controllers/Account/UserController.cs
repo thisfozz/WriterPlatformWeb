@@ -16,6 +16,7 @@ public class UserController : Controller
     }
 
     [HttpGet("login")]
+    [AllowAnonymous]
     public IActionResult Login(string returnUrl = null)
     {
         ViewData["Title"] = "Авторизация";
@@ -25,6 +26,7 @@ public class UserController : Controller
     }
 
     [HttpPost("login")]
+    [AllowAnonymous]
     public async Task<IActionResult> Login([FromForm] LoginModel model, string returnUrl = null)
     {
         if (ModelState.IsValid)
@@ -41,6 +43,7 @@ public class UserController : Controller
     }
 
     [HttpGet("register")]
+    [AllowAnonymous]
     public IActionResult Register(string returnUrl = null)
     {
         ViewData["Title"] = "Регистрация";
@@ -50,6 +53,7 @@ public class UserController : Controller
     }
 
     [HttpPost("register")]
+    [AllowAnonymous]
     public async Task<IActionResult> Register([FromForm] RegisterModel model)
     {
         if (ModelState.IsValid)

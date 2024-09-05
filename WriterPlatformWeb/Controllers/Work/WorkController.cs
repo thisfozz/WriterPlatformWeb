@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using WriterPlatformWeb.Models.ViewModel;
 using WriterPlatformWeb.Models.ViewModel.Work;
 using WriterPlatformWeb.Services.Contracts.Interfaces;
 
@@ -60,11 +59,9 @@ public class WorkController : Controller
             Genres = genres
         };
 
-        return View("PublishWorkForm", viewModel); // НЕ ЗАБЫТЬ СОЗДАТЬ ПРЕДСТАВЛЕНИЕ
+        return View("PublishWorkForm", viewModel);
     }
 
-
-    // Обработать отправленную форму для создания нового произведения
     [HttpPost("publish")]
     [Authorize]
     public async Task<IActionResult> PublishWork(PublishWorkViewModel model)

@@ -58,6 +58,21 @@ public class UserRepository : IUserRepository
 
         return true;
     }
+    public async Task<bool> UpdateUsernameAsync(Guid userId, string username)
+    {
+        var user = await GetUserByIdAsync(userId);
+
+        if (user == null)
+        {
+            return false;
+        }
+
+        user.Login = username;
+
+        await _context.SaveChangesAsync();
+
+        return true;
+    }
 
     public async Task<bool> UpdatePasswordAsync(Guid userId, string password)
     {

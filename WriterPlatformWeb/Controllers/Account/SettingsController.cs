@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using WriterPlatformWeb.Models.ViewModel.User;
 using WriterPlatformWeb.Services.Contracts.Interfaces;
 
 namespace WriterPlatformWeb.Controllers.Account;
@@ -9,59 +10,76 @@ namespace WriterPlatformWeb.Controllers.Account;
 public class SettingsController : Controller
 {
     private readonly IUserService _userService;
+    private readonly IRoleService _roleService;
 
-    public SettingsController(IUserService userService)
+    public SettingsController(IUserService userService, IRoleService roleService)
     {
         _userService = userService;
+        _roleService = roleService;
     }
 
     [HttpGet]
-    public IActionResult Settings()
-    {
-        return View();
-    }
+	public async Task<IActionResult> Settings()
+	{
+		var user = await _userService.GetUserIdAsync();
+        var role = await _roleService.GetRoleByIdAsync(user.RoleId);
 
-    [HttpPost("update-email")]
-    public async Task<IActionResult> UpdateEmail([FromForm] string email)
+
+        if (user == null)
+		{
+			TempData["ErrorMessage"] = "Не удалось загрузить данные пользователя.";
+			return RedirectToAction("Index", "Home");
+		}
+
+		var model = new UserViewModel
+		{
+			UserId = user.UserId,
+			UserName = user.UserName,
+			Email = user.Email,
+            Password = user.Password,
+			RoleName = role.RoleName
+        };
+
+		return View("Settings", model);
+	}
+
+    [HttpPost("update-settings")]
+    public async Task<IActionResult> UpdateSettings(UserViewModel model)
     {
-        if (string.IsNullOrWhiteSpace(email))
+        if (ModelState.IsValid)
         {
-            TempData["ErrorMessage"] = "Введите Email";
+            var resultEmail = true;
+            var resultPassword = true;
+            var resultUsername = true;
+
+            if (!string.IsNullOrWhiteSpace(model.Email))
+            {
+                resultEmail = await _userService.UpdateEmailAsync(model.Email);
+            }
+
+            if (!string.IsNullOrWhiteSpace(model.Password))
+            {
+                resultPassword = await _userService.UpdatePasswordAsync(model.Password);
+            }
+
+            if (!string.IsNullOrWhiteSpace(model.UserName))
+            {
+                resultUsername = await _userService.UpdateUsernameAsync(model.UserName);
+            }
+
+            if (resultEmail && resultPassword && resultUsername)
+            {
+                TempData["SuccessMessage"] = "Настройки успешно обновлены.";
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "Не удалось обновить некоторые настройки.";
+            }
+
             return RedirectToAction(nameof(Settings));
         }
 
-        var result = await _userService.UpdateEmailAsync(email);
-        if (result)
-        {
-            TempData["SuccessMessage"] = "Email успешно обновлен.";
-        }
-        else
-        {
-            TempData["ErrorMessage"] = "Не удалось обновить email.";
-        }
-
-        return RedirectToAction(nameof(Settings));
-    }
-
-    [HttpPost("update-password")]
-    public async Task<IActionResult> UpdatePassword([FromForm] string password)
-    {
-        if (string.IsNullOrWhiteSpace(password))
-        {
-            TempData["ErrorMessage"] = "Введите пароль";
-            return RedirectToAction(nameof(Settings));
-        }
-
-        var result = await _userService.UpdatePasswordAsync(password);
-        if (result)
-        {
-            TempData["SuccessMessage"] = "Пароль успешно обновлен.";
-        }
-        else
-        {
-            TempData["ErrorMessage"] = "Не удалось обновить пароль.";
-        }
-
+        TempData["ErrorMessage"] = "Неверные данные.";
         return RedirectToAction(nameof(Settings));
     }
 }

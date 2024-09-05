@@ -20,7 +20,7 @@ public class CommentController : Controller
     [Authorize]
     public async Task<IActionResult> AddComment(int workId, [FromForm] string comment)
     {
-        var userDto = await _userService.GetUserByIdAsync();
+        var userDto = await _userService.GetUserIdAsync();
 
         if (userDto == null)
         {
