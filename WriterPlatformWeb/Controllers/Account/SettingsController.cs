@@ -24,7 +24,6 @@ public class SettingsController : Controller
 		var user = await _userService.GetUserIdAsync();
         var role = await _roleService.GetRoleByIdAsync(user.RoleId);
 
-
         if (user == null)
 		{
 			TempData["ErrorMessage"] = "Не удалось загрузить данные пользователя.";

@@ -36,7 +36,7 @@
                         </div>
                         <div class="card-footer">
                             <a asp-action="GetWorkDetails" asp-controller="Work" asp-route-id="@work.WorkId" class="btn btn-primary">Подробнее</a>
-                            <a asp-action="Read" asp-controller="Work" asp-route-id="@work.WorkId" class="btn btn-success">Читать</a>
+                            <a asp-action="ReadText" asp-controller="Work" asp-route-id="@work.WorkId" asp-route-page="1" class="btn btn-success">Читать</a>
                         </div>
                     </div>
                 </div>

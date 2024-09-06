@@ -61,4 +61,9 @@ public class WorkService : IWorkService
     {
         return await _workRepository.UpdateRatingAsync(workId, newAverageRating);
     }
+
+    public async Task<string> GetTextWork(int workId)
+    {
+        return await _workRepository.GetTextWork(workId);
+    }
 }
