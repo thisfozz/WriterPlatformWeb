@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WriterPlatformWeb.Models.ViewModel.Work;
 using WriterPlatformWeb.Services.Contracts.Interfaces;
@@ -13,6 +12,7 @@ public class WorkController : Controller
     private readonly IGenreService _genreService;
     private readonly IAuthorService _authorService;
     private readonly ICommentService _commentService;
+    private const int WordsPerPage = 200;
 
     public WorkController(IWorkService workService, IGenreService genreService, IAuthorService authorService, ICommentService commentService)
     {
@@ -78,5 +78,39 @@ public class WorkController : Controller
         model.Genres = await _genreService.GetAllGenresAsync();
 
         return View("PublishWorkForm", model);
+    }
+
+    [HttpGet("read-text/{id}")]
+    [Authorize]
+    public async Task<IActionResult> ReadText([FromRoute] int id, int page = 1)
+    {
+        var fullText = await _workService.GetTextWork(id);
+
+        if (string.IsNullOrEmpty(fullText))
+        {
+            return NotFound();
+        }
+
+        var words = fullText.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+
+        var totalPages = (int)Math.Ceiling((double)words.Length / WordsPerPage);
+
+        if (page < 1) page = 1;
+        if (page > totalPages) page = totalPages;
+
+        var pageWords = words.Skip((page - 1) * WordsPerPage).Take(WordsPerPage);
+
+        var pageText = string.Join(" ", pageWords);
+
+        var model = new PaginatedTextViewModel
+        {
+            WorkId = id,
+            Text = pageText,
+            CurrentPage = page,
+            TotalPages = totalPages,
+        };
+
+        return View("Readtext", model);
     }
 }

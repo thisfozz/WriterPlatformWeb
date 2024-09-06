@@ -100,4 +100,9 @@ public class WorkRepository : IWorkRepository
             .Include(w => w.Ratings)
             .ToListAsync();
     }
+
+    public async Task<string> GetTextWork(int workId)
+    {
+        return await _context.Works.Where(w => w.WorksId == workId).Select(w => w.Text).FirstOrDefaultAsync();
+    }
 }
