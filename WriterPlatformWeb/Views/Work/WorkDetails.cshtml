@@ -19,39 +19,41 @@
         </div>
     </div>
 
-    <div class="comments-section mt-5">
-        <h4 class="custom-fonts">Комментарии</h4>
-        @if (Model.Comments != null && Model.Comments.Any())
-        {
-            <ul id="comments-list" class="list-unstyled">
-                @foreach (var comment in Model.Comments)
-                {
-                    <li class="comment-item">
-                        <p class="custom-fonts"><strong>@comment.Username:</strong> @comment.Comment</p>
-                    </li>
-                }
-            </ul>
-        }
-        else
-        {
-            <p class="custom-fonts">Нет комментариев.</p>
-        }
-    </div>
-
-    <div class="add-comment-section mt-4">
-        <h4 class="custom-fonts">Оставьте комментарий</h4>
-        <form id="comment-form" asp-action="AddComment" asp-controller="Comment" asp-route-workId="@Model.Work.WorkId" method="post">
-            <div class="form-group">
-                <textarea name="comment" class="form-control" rows="4" placeholder="Ваш комментарий" required></textarea>
-            </div>
-            <button type="submit" class="btn btn-primary custom-fonts">Отправить комментарий</button>
-        </form>
-    </div>
-
     <div class="mt-4 book-details-footer">
         <a asp-action="Index" asp-controller="Home" class="btn btn-primary custom-fonts">Вернуться на главную</a>
     </div>
 </div>
+
+<!-- Переместите блок комментариев вне book-details-section -->
+<div class="comments-section mt-5">
+    <h4 class="custom-fonts">Комментарии</h4>
+    @if (Model.Comments != null && Model.Comments.Any())
+    {
+        <ul id="comments-list" class="list-unstyled">
+            @foreach (var comment in Model.Comments)
+            {
+                <li class="comment-item">
+                    <p class="custom-fonts"><strong>@comment.Username:</strong> @comment.Comment</p>
+                </li>
+            }
+        </ul>
+    }
+    else
+    {
+        <p class="custom-fonts">Нет комментариев.</p>
+    }
+</div>
+
+<div class="add-comment-section mt-4">
+    <h4 class="custom-fonts">Оставьте комментарий</h4>
+    <form id="comment-form" asp-action="AddComment" asp-controller="Comment" asp-route-workId="@Model.Work.WorkId" method="post">
+        <div class="form-group">
+            <textarea name="comment" class="form-control" rows="4" placeholder="Ваш комментарий" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary custom-fonts">Отправить комментарий</button>
+    </form>
+</div>
+
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>

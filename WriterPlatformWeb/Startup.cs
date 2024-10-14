@@ -1,5 +1,4 @@
-﻿using Consul;
-using DataAccess.Contexts;
+﻿using DataAccess.Contexts;
 using DataAccess.Repositories.Contracts.Interfaces;
 using DataAccess.Repositories.Implementations;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -23,19 +22,11 @@ public class Startup
         services.AddAutoMapper(typeof(Startup).Assembly);
         services.AddHttpContextAccessor();
 
-        var consulAdress = _configuration.GetValue<string>("Consul") ?? throw new InvalidOperationException("Consul adress 'Consul' not found.");
-        services.AddSingleton<IConsulClient, ConsulClient>(p => new ConsulClient(opt =>
+        services.AddDbContext<WriterPlatformContext>(options =>
         {
-            opt.Address = new Uri(consulAdress);
-        }));
-
-        services.AddSingleton<ConsulService>();
-
-        var serviceProvider = services.BuildServiceProvider();
-        var consulService = serviceProvider.GetService<ConsulService>();
-        var connectionString = consulService.GetConnectionString().Result;
-
-        services.AddDbContext<WriterPlatformContext>(opt => opt.UseNpgsql(connectionString));
+            var connectionString = _configuration.GetConnectionString("WriterPlatformConnection");
+            options.UseNpgsql(connectionString);
+        });
 
         services.AddScoped<IAuthorRepository, AuthorRepository>();
         services.AddScoped<ICommentRepository, CommentRepository>();

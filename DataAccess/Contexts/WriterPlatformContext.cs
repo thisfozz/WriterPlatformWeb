@@ -9,7 +9,7 @@ public partial class WriterPlatformContext : DbContext
     public WriterPlatformContext(DbContextOptions<WriterPlatformContext> options)
         : base(options) 
     {
-
+        base.Database.EnsureCreated();
     }
 
     public virtual DbSet<AuthorEntity> Authors { get; set; }
